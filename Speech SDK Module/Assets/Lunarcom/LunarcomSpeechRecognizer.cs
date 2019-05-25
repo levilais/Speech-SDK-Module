@@ -14,7 +14,7 @@ using Microsoft.CognitiveServices.Speech.Translation;
 using UnityEngine.Android;
 #endif
 
-public class HelloWorld : MonoBehaviour
+public class LunarcomSpeechRecognizer : MonoBehaviour
 {
     // Hook up the two properties below with a Text and Button object in your UI.
     public Text outputText;
@@ -35,8 +35,8 @@ public class HelloWorld : MonoBehaviour
     private bool micPermissionGranted = false;
     private bool scanning = false;
 
-    private string fromLanguage = "en-us";
-    private string toLanguage = "";
+    private string fromLanguage = "en-US";
+    private string toLanguage = "ru-RU";
 
 #if PLATFORM_ANDROID
     // Required to manifest microphone permission, cf.
@@ -69,7 +69,7 @@ public class HelloWorld : MonoBehaviour
         }
     }
 
-    public void StartSpeechScan()
+    public void BeginRecognizing()
     {
         if (!scanning)
         {
@@ -79,6 +79,21 @@ public class HelloWorld : MonoBehaviour
         } else
         {
             scanning = false;
+            switch (speechRecognitionMode)
+            {
+                case SpeechRecognitionMode.Continuous_Recognize:
+                    recognizer = null;
+                    break;
+                case SpeechRecognitionMode.One_Time_Recognize:
+                    recognizer = null;
+                    break;
+                case SpeechRecognitionMode.Translate:
+                    translator = null;
+                    break;
+                default:
+                    // no mode found
+                    break;
+            }
             recognizer = null;
         }
     }
@@ -103,42 +118,43 @@ public class HelloWorld : MonoBehaviour
         }
     }
 
-    private async void StartContinuousTranslation()
+    public async void StartContinuousTranslation()
     {
-        UnityEngine.Debug.LogFormat("Starting Continuous Translation");
+        UnityEngine.Debug.LogFormat("Starting Continuous Translation Recognition");
         CreateTranslationRecognizer();
 
         if (translator != null)
         {
-            UnityEngine.Debug.LogFormat("Starting Speech Recognizer");
             await translator.StartContinuousRecognitionAsync().ConfigureAwait(false);
-
             recognizedString = "Say something...";
         }
     }
 
     void CreateTranslationRecognizer()
     {
-        UnityEngine.Debug.LogFormat("Creating Speech Recognizer");
+        UnityEngine.Debug.LogFormat("Creating Translation Recognizer");
         recognizedString = "Initializing speech recognition, please wait...";
 
         if (translator == null)
         {
+            UnityEngine.Debug.LogFormat("Creating Translator");
             SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+            UnityEngine.Debug.LogFormat("1");
             config.SpeechRecognitionLanguage = fromLanguage;
-            config.AddTargetLanguage("russian");
+            UnityEngine.Debug.LogFormat("2");
+            config.AddTargetLanguage(toLanguage);
+            UnityEngine.Debug.LogFormat("3");
             translator = new TranslationRecognizer(config);
-            
+            UnityEngine.Debug.LogFormat("4");
             if (translator != null)
             {
-                
-                //recognizer.Recognizing += RecognizingHandler;
-                //recognizer.Recognized += RecognizedHandler;
-                //recognizer.SpeechStartDetected += SpeechStartDetected;
-                //recognizer.SpeechEndDetected += SpeechEndDetectedHandler;
-                //recognizer.Canceled += CancelHandler;
-                //recognizer.SessionStarted += SessionStartedHandler;
-                //recognizer.SessionStopped += SessionStoppedHandler;
+                UnityEngine.Debug.LogFormat("5");
+                translator.Recognizing += HandleTranslatorRecognizing;
+                translator.Recognized += HandleTranslatorRecognized;
+                translator.Canceled += HandleTranslatorCanceled;
+                translator.SessionStarted += HandleTranslatorSessionStarted;
+                translator.SessionStopped += HandleTranslatorSessionStopped;
+                UnityEngine.Debug.LogFormat("6");
             }
         }
     }
@@ -240,6 +256,46 @@ public class HelloWorld : MonoBehaviour
     private void CancelHandler(object sender, RecognitionEventArgs e)
     {
         UnityEngine.Debug.Log("SpeechEndDetectedHandler called");
+    }
+    #endregion
+    #region Translation Recognition Event Handlers
+    private void HandleTranslatorRecognizing(object s, TranslationRecognitionEventArgs e)
+    {
+        UnityEngine.Debug.Log("HandleTranslatorRecognizing called");
+        recognizedString = $"RECOGNIZING in '{fromLanguage}': Text={e.Result.Text}";
+        foreach (var element in e.Result.Translations)
+        {
+            recognizedString = $"TRANSLATING into '{element.Key}': {element.Value}";
+        }
+    }
+
+    private void HandleTranslatorRecognized(object s, TranslationRecognitionEventArgs e)
+    {
+        UnityEngine.Debug.Log("ResultReason on Recognized: " + e.Result.Reason.ToString());
+        if (e.Result.Reason == ResultReason.TranslatedSpeech)
+        {
+            recognizedString = $"\nFinal result: Reason: {e.Result.Reason.ToString()}, recognized text in {fromLanguage}: {e.Result.Text}.";
+            foreach (var element in e.Result.Translations)
+            {
+                recognizedString = $"    TRANSLATING into '{element.Key}': {element.Value}";
+            }
+        }
+    }
+
+    private void HandleTranslatorCanceled(object s, TranslationRecognitionEventArgs e)
+    {
+
+        UnityEngine.Debug.Log("HandleTranslatorCanceled called");
+    }
+
+    private void HandleTranslatorSessionStarted(object s, SessionEventArgs e)
+    {
+        UnityEngine.Debug.Log("HandleTranslatorSessionStarted called");
+    }
+
+    public void HandleTranslatorSessionStopped(object s, SessionEventArgs e)
+    {
+        UnityEngine.Debug.Log("HandleTranslatorSessionStopped called");
     }
     #endregion
 
