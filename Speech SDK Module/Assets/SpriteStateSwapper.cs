@@ -16,10 +16,12 @@ public class SpriteStateSwapper : MonoBehaviour
         {
             button.image.sprite = Mic_Default;
             isSelected = false;
+            LunarcomController.lunarcomController.TurnOffLunarcom();
         } else
         {
             button.image.sprite = Mic_Activated;
             isSelected = true;
+            LunarcomController.lunarcomController.TurnOnLunarcom();
         }
     }
 }
