@@ -1,6 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Globalization;
+using System;
+using System.Diagnostics;
+using UnityEngine;
 using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
+using Microsoft.CognitiveServices.Speech.Translation;
+
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
 #endif
@@ -9,13 +18,25 @@ public class HelloWorld : MonoBehaviour
 {
     // Hook up the two properties below with a Text and Button object in your UI.
     public Text outputText;
-    public Button startRecoButton;
 
+    public enum SpeechRecognitionMode { Continuous_Recognize, One_Time_Recognize,  Translate };
+    public SpeechRecognitionMode speechRecognitionMode = SpeechRecognitionMode.Continuous_Recognize;
+
+    private string recognizedString = "";
     private object threadLocker = new object();
-    private bool waitingForReco;
-    private string message;
+    public bool waitingForReco;
+
+    public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
+    public string SpeechServiceRegion = "westus";
+
+    private SpeechRecognizer recognizer;
+    private TranslationRecognizer translator;
 
     private bool micPermissionGranted = false;
+    private bool scanning = false;
+
+    private string fromLanguage = "en-us";
+    private string toLanguage = "";
 
 #if PLATFORM_ANDROID
     // Required to manifest microphone permission, cf.
@@ -23,62 +44,11 @@ public class HelloWorld : MonoBehaviour
     private Microphone mic;
 #endif
 
-    public async void ButtonClick()
-    {
-        // Creates an instance of a speech config with specified subscription key and service region.
-        // Replace with your own subscription key and service region (e.g., "westus").
-        var config = SpeechConfig.FromSubscription("febaa5534609486b852704fcffbf1d2a", "westus");
-
-        // Make sure to dispose the recognizer after use!
-        using (var recognizer = new SpeechRecognizer(config))
-        {
-            lock (threadLocker)
-            {
-                waitingForReco = true;
-            }
-
-            // Starts speech recognition, and returns after a single utterance is recognized. The end of a
-            // single utterance is determined by listening for silence at the end or until a maximum of 15
-            // seconds of audio is processed.  The task returns the recognition text as result.
-            // Note: Since RecognizeOnceAsync() returns only a single utterance, it is suitable only for single
-            // shot recognition like command or query.
-            // For long-running multi-utterance recognition, use StartContinuousRecognitionAsync() instead.
-            var result = await recognizer.RecognizeOnceAsync().ConfigureAwait(false);
-
-            // Checks result.
-            string newMessage = string.Empty;
-            if (result.Reason == ResultReason.RecognizedSpeech)
-            {
-                newMessage = result.Text;
-            }
-            else if (result.Reason == ResultReason.NoMatch)
-            {
-                newMessage = "NOMATCH: Speech could not be recognized.";
-            }
-            else if (result.Reason == ResultReason.Canceled)
-            {
-                var cancellation = CancellationDetails.FromResult(result);
-                newMessage = $"CANCELED: Reason={cancellation.Reason} ErrorDetails={cancellation.ErrorDetails}";
-            }
-
-            lock (threadLocker)
-            {
-                message = newMessage;
-                waitingForReco = false;
-            }
-        }
-    }
-
     void Start()
     {
         if (outputText == null)
         {
             UnityEngine.Debug.LogError("outputText property is null! Assign a UI Text element to it.");
-        }
-        else if (startRecoButton == null)
-        {
-            message = "startRecoButton property is null! Assign a UI Button to it.";
-            UnityEngine.Debug.LogError(message);
         }
         else
         {
@@ -87,39 +57,209 @@ public class HelloWorld : MonoBehaviour
 #if PLATFORM_ANDROID
             // Request to use the microphone, cf.
             // https://docs.unity3d.com/Manual/android-RequestingPermissions.html
-            message = "Waiting for mic permission";
+            //message = "Waiting for mic permission";
             if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
             {
                 Permission.RequestUserPermission(Permission.Microphone);
             }
 #else
             micPermissionGranted = true;
-            message = "Click button to recognize speech";
+            //message = "Click button to recognize speech";
 #endif
-            startRecoButton.onClick.AddListener(ButtonClick);
         }
     }
 
-    void Update()
+    public void StartSpeechScan()
     {
-#if PLATFORM_ANDROID
-        if (!micPermissionGranted && Permission.HasUserAuthorizedPermission(Permission.Microphone))
+        if (!scanning)
         {
-            micPermissionGranted = true;
-            message = "Click button to recognize speech";
+            recognizedString = "Say something...";
+            StartRecognizer();
+            scanning = true;
+        } else
+        {
+            scanning = false;
+            recognizer = null;
         }
-#endif
+    }
 
-        lock (threadLocker)
+    public void StartRecognizer()
+    {
+        if (micPermissionGranted)
         {
-            if (startRecoButton != null)
+            if (speechRecognitionMode == SpeechRecognitionMode.Translate)
             {
-                startRecoButton.interactable = !waitingForReco && micPermissionGranted;
-            }
-            if (outputText != null)
+                StartContinuousTranslation();
+            } else if (speechRecognitionMode == SpeechRecognitionMode.Continuous_Recognize)
             {
-                outputText.text = message;
+                StartContinuousRecognition();
+            } else if (speechRecognitionMode == SpeechRecognitionMode.One_Time_Recognize)
+            {
+                StartOneTimeRecognition();
             }
+        } else
+        {
+            recognizedString = "This app cannot function without access to the microphone.";
+        }
+    }
+
+    private async void StartContinuousTranslation()
+    {
+        UnityEngine.Debug.LogFormat("Starting Continuous Translation");
+        CreateTranslationRecognizer();
+
+        if (translator != null)
+        {
+            UnityEngine.Debug.LogFormat("Starting Speech Recognizer");
+            await translator.StartContinuousRecognitionAsync().ConfigureAwait(false);
+
+            recognizedString = "Say something...";
+        }
+    }
+
+    void CreateTranslationRecognizer()
+    {
+        UnityEngine.Debug.LogFormat("Creating Speech Recognizer");
+        recognizedString = "Initializing speech recognition, please wait...";
+
+        if (translator == null)
+        {
+            SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+            config.SpeechRecognitionLanguage = fromLanguage;
+            config.AddTargetLanguage("russian");
+            translator = new TranslationRecognizer(config);
+            
+            if (translator != null)
+            {
+                
+                //recognizer.Recognizing += RecognizingHandler;
+                //recognizer.Recognized += RecognizedHandler;
+                //recognizer.SpeechStartDetected += SpeechStartDetected;
+                //recognizer.SpeechEndDetected += SpeechEndDetectedHandler;
+                //recognizer.Canceled += CancelHandler;
+                //recognizer.SessionStarted += SessionStartedHandler;
+                //recognizer.SessionStopped += SessionStoppedHandler;
+            }
+        }
+    }
+
+    private async void StartOneTimeRecognition()
+    {
+        CreateSpeechRecognizer();
+
+        if (recognizer != null)
+        {
+            waitingForReco = true;
+            UnityEngine.Debug.LogFormat("Starting Speech Recognizer");
+            await recognizer.RecognizeOnceAsync().ConfigureAwait(false);
+            recognizedString = "Say something...";
+        }
+    }
+
+    private async void StartContinuousRecognition()
+    {
+        UnityEngine.Debug.LogFormat("Starting Continuous Speech Recognition");
+        CreateSpeechRecognizer();
+
+        if (recognizer != null)
+        {
+            await recognizer.StartContinuousRecognitionAsync().ConfigureAwait(false);
+            recognizedString = "Say something...";
+        }   
+    }
+
+    void CreateSpeechRecognizer()
+    {
+        if (recognizer == null)
+        {
+            SpeechConfig config = SpeechConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+            config.SpeechRecognitionLanguage = fromLanguage;
+            recognizer = new SpeechRecognizer(config);
+            if (recognizer != null)
+            {
+                recognizer.Recognizing += RecognizingHandler;
+                recognizer.Recognized += RecognizedHandler;
+                recognizer.SpeechStartDetected += SpeechStartDetected;
+                recognizer.SpeechEndDetected += SpeechEndDetectedHandler;
+                recognizer.Canceled += CancelHandler;
+                recognizer.SessionStarted += SessionStartedHandler;
+                recognizer.SessionStopped += SessionStoppedHandler;
+            }
+        }
+    }
+
+    #region Speech Recognition Event Handlers
+    private void SessionStartedHandler(object sender, SessionEventArgs e)
+    {
+        UnityEngine.Debug.Log("SessionStartedHandler called");
+    }
+    private void SessionStoppedHandler(object sender, SessionEventArgs e)
+    {
+        UnityEngine.Debug.Log("SessionStoppedHandler called");
+    }
+
+    private void RecognizingHandler(object sender, SpeechRecognitionEventArgs e)
+    {
+        if (e.Result.Reason == ResultReason.RecognizingSpeech)
+        {
+            lock (threadLocker)
+            {
+                recognizedString = $"HYPOTHESIS: {Environment.NewLine}{e.Result.Text}";
+            }
+        }
+        UnityEngine.Debug.Log("Recognizing Handler called");
+    }
+
+    private void RecognizedHandler(object sender, SpeechRecognitionEventArgs e)
+    {
+        UnityEngine.Debug.Log("Recognized Handler called");
+        if (e.Result.Reason == ResultReason.RecognizingSpeech)
+        {
+            lock (threadLocker)
+            {
+                recognizedString = $"HYPOTHESIS: {Environment.NewLine}{e.Result.Text}";
+            }
+        } else if (e.Result.Reason == ResultReason.NoMatch)
+        {
+            UnityEngine.Debug.Log("No Match Found");
+        }
+
+        waitingForReco = false;
+    }
+
+    private void SpeechStartDetected(object sender, RecognitionEventArgs e)
+    {
+        UnityEngine.Debug.Log("SpeechStart Handler called");
+    }
+
+    private void SpeechEndDetectedHandler(object sender, RecognitionEventArgs e)
+    {
+        UnityEngine.Debug.Log("SpeechStart Handler called");
+    }
+
+    private void CancelHandler(object sender, RecognitionEventArgs e)
+    {
+        UnityEngine.Debug.Log("SpeechEndDetectedHandler called");
+    }
+    #endregion
+
+    private void Update()
+    {
+        if (speechRecognitionMode == SpeechRecognitionMode.One_Time_Recognize)
+        {
+            if (waitingForReco)
+            {
+                outputText.text = recognizedString;
+            } else
+            {
+                waitingForReco = false;
+                recognizer = null;
+            }
+        } else
+        {
+            outputText.text = recognizedString;
         }
     }
 }
+
+
