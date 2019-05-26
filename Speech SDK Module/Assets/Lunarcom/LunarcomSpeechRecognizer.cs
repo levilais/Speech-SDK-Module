@@ -22,7 +22,8 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     public enum SpeechRecognitionMode { Continuous_Recognize, One_Time_Recognize,  Translate };
     public SpeechRecognitionMode speechRecognitionMode = SpeechRecognitionMode.Continuous_Recognize;
 
-    private string recognizedString = "";
+    private string recognizedString = "Turn ON to begin speech to text.";
+    private string translatedString = "";
     private object threadLocker = new object();
     public bool waitingForReco;
 
@@ -74,6 +75,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         if (!scanning)
         {
             recognizedString = "Say something...";
+            translatedString = "";
             StartRecognizer();
             scanning = true;
         } else
@@ -137,24 +139,19 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
 
         if (translator == null)
         {
-            UnityEngine.Debug.LogFormat("Creating Translator");
             SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
-            UnityEngine.Debug.LogFormat("1");
             config.SpeechRecognitionLanguage = fromLanguage;
-            UnityEngine.Debug.LogFormat("2");
             config.AddTargetLanguage(toLanguage);
-            UnityEngine.Debug.LogFormat("3");
+
             translator = new TranslationRecognizer(config);
-            UnityEngine.Debug.LogFormat("4");
+
             if (translator != null)
             {
-                UnityEngine.Debug.LogFormat("5");
                 translator.Recognizing += HandleTranslatorRecognizing;
                 translator.Recognized += HandleTranslatorRecognized;
                 translator.Canceled += HandleTranslatorCanceled;
                 translator.SessionStarted += HandleTranslatorSessionStarted;
                 translator.SessionStopped += HandleTranslatorSessionStopped;
-                UnityEngine.Debug.LogFormat("6");
             }
         }
     }
@@ -220,7 +217,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         {
             lock (threadLocker)
             {
-                recognizedString = $"HYPOTHESIS: {Environment.NewLine}{e.Result.Text}";
+                recognizedString = $"{e.Result.Text}";
             }
         }
         UnityEngine.Debug.Log("Recognizing Handler called");
@@ -233,7 +230,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         {
             lock (threadLocker)
             {
-                recognizedString = $"HYPOTHESIS: {Environment.NewLine}{e.Result.Text}";
+                recognizedString = $"{e.Result.Text}";
             }
         } else if (e.Result.Reason == ResultReason.NoMatch)
         {
@@ -261,11 +258,23 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     #region Translation Recognition Event Handlers
     private void HandleTranslatorRecognizing(object s, TranslationRecognitionEventArgs e)
     {
-        UnityEngine.Debug.Log("HandleTranslatorRecognizing called");
-        recognizedString = $"RECOGNIZING in '{fromLanguage}': Text={e.Result.Text}";
-        foreach (var element in e.Result.Translations)
+        //UnityEngine.Debug.Log("HandleTranslatorRecognizing called");
+        ////recognizedString = $"RECOGNIZING in '{fromLanguage}': Text={e.Result.Text}";
+        //foreach (var element in e.Result.Translations)
+        //{
+        //    translatedString = $"TRANSLATING into '{element.Key}': {element.Value}";
+        //}
+        UnityEngine.Debug.Log("ResultReason on Recognized: " + e.Result.Reason.ToString());
+        if (e.Result.Reason == ResultReason.TranslatingSpeech)
         {
-            recognizedString = $"TRANSLATING into '{element.Key}': {element.Value}";
+            //recognizedString = $"\nFinal result: Reason: {e.Result.Reason.ToString()}, recognized text in {fromLanguage}: {e.Result.Text}.";
+            recognizedString = e.Result.Text;
+
+            foreach (var element in e.Result.Translations)
+            {
+                // translatedString = $"    TRANSLATING into '{element.Key}': {element.Value}";
+                translatedString = element.Value;
+            }
         }
     }
 
@@ -274,10 +283,13 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         UnityEngine.Debug.Log("ResultReason on Recognized: " + e.Result.Reason.ToString());
         if (e.Result.Reason == ResultReason.TranslatedSpeech)
         {
-            recognizedString = $"\nFinal result: Reason: {e.Result.Reason.ToString()}, recognized text in {fromLanguage}: {e.Result.Text}.";
+            //recognizedString = $"\nFinal result: Reason: {e.Result.Reason.ToString()}, recognized text in {fromLanguage}: {e.Result.Text}.";
+            recognizedString = e.Result.Text;
+
             foreach (var element in e.Result.Translations)
             {
-                recognizedString = $"    TRANSLATING into '{element.Key}': {element.Value}";
+                // translatedString = $"    TRANSLATING into '{element.Key}': {element.Value}";
+                translatedString = element.Value;
             }
         }
     }
@@ -311,7 +323,15 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
                 waitingForReco = false;
                 recognizer = null;
             }
-        } else
+        } else if (speechRecognitionMode == SpeechRecognitionMode.Translate)
+        {
+            outputText.text = recognizedString;
+            if (translatedString != "")
+            {
+                outputText.text += "\n\nSending...\n" + translatedString;
+            }
+        }
+        else
         {
             outputText.text = recognizedString;
         }
