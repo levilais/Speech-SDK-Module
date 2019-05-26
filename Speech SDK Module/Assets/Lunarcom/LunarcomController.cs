@@ -10,8 +10,7 @@ public class LunarcomController : MonoBehaviour
     // Key 1: 37b71e1e68fd497aa06367bb75bd2351
     // Key 2: febaa5534609486b852704fcffbf1d2a
 
-    public Text lunarcomText;
-
+    [Header("Connection Light References")]
     public Sprite connectedLight;
     public Sprite disconnectedLight;
     public Image connectionLight;
@@ -28,16 +27,6 @@ public class LunarcomController : MonoBehaviour
     private void Start()
     {
         ShowConnected();
-    }
-
-    public void TurnOnLunarcom()
-    {
-        lunarcomText.text = "Say something...";
-    }
-
-    public void TurnOffLunarcom()
-    {
-        lunarcomText.text = "Turn on to begin speech to text.";
     }
 
     public void ShowConnected()
