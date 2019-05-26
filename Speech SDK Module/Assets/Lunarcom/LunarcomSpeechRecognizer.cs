@@ -16,7 +16,7 @@ using UnityEngine.Android;
 
 public enum SpeechRecognitionMode { Continuous_Recognize, One_Time_Recognize, Translate, Disabled };
 public enum SpecificityRequired { Exact, Intent };
-public enum EnableDeviceAsBackup { Enabled, Disabled };
+public enum EnableOfflineRecognition { Enabled, Disabled };
 
 public class LunarcomSpeechRecognizer : MonoBehaviour
 {
@@ -31,7 +31,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     [Space(6)]
     [Header("Lunarcom Settings")]
     public SpecificityRequired SpecificityRequired = SpecificityRequired.Exact;
-    public EnableDeviceAsBackup EnableDeviceAsBackup = EnableDeviceAsBackup.Disabled;
+    public EnableOfflineRecognition EnableOfflineRecognition = EnableOfflineRecognition.Disabled;
     public bool KeywordLaunchEnabled = false;
 
     private string recognizedString = "Select a mode to begin.";
