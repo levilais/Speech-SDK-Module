@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 
 public enum RecognitionMode { Speech_Recognizer, Intent_Recognizer, Tralation_Recognizer, Disabled };
-public enum SpecificityRequired { Exact, Intent };
 public enum EnableOfflineRecognition { Enabled, Disabled };
 
 public class LunarcomController : MonoBehaviour
@@ -30,7 +29,6 @@ public class LunarcomController : MonoBehaviour
 
     [Space(6)]
     [Header("Lunarcom Settings")]
-    public SpecificityRequired SpecificityRequired = SpecificityRequired.Exact;
     public EnableOfflineRecognition EnableOfflineRecognition = EnableOfflineRecognition.Disabled;
     public bool KeywordLaunchEnabled = false;
 

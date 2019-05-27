@@ -9,7 +9,6 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
     public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
     public string SpeechServiceRegion = "westus";
 
-    private Text outputText;
     private string recognizedString = "Select a mode to begin.";
     private string translatedString = "";
     private object threadLocker = new object();
@@ -30,7 +29,6 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
         }
         else
         {
-            outputText = LunarcomController.lunarcomController.outputText;
             micPermissionGranted = true;
         }
 
@@ -143,17 +141,10 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Tralation_Recognizer)
         {
-            outputText.text = recognizedString;
+            LunarcomController.lunarcomController.outputText.text = recognizedString;
             if (translatedString != "")
             {
-                outputText.text += "\n\nSending...\n" + translatedString;
-            }
-        }
-        else
-        {
-            if (LunarcomController.lunarcomController.speechRecognitionMode != RecognitionMode.Disabled)
-            {
-                outputText.text = recognizedString;
+                LunarcomController.lunarcomController.outputText.text += "\n\nSending...\n" + translatedString;
             }
         }
     }

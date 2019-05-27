@@ -8,7 +8,6 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
     public string SpeechServiceRegion = "westus";
 
-    private Text outputText;
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
 
@@ -27,7 +26,6 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         }
         else
         {
-            outputText = LunarcomController.lunarcomController.outputText;
             micPermissionGranted = true;
         }
 
@@ -38,11 +36,12 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (recognitionMode == RecognitionMode.Speech_Recognizer)
         {
-            recognizedString = "Say something...";
             BeginRecognizing();
+            recognizedString = "Say something...";
         }
         else
         {
+            Debug.Log("speech recognizer being set to null");
             recognizer = null;
         }
     }
@@ -144,7 +143,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Speech_Recognizer)
         {
-            outputText.text = recognizedString;
+            LunarcomController.lunarcomController.outputText.text = recognizedString;
         }
     }
 }

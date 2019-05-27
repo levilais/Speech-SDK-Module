@@ -14,7 +14,7 @@ public class LunarcomButtonController : MonoBehaviour
     public Sprite Activated;
 
     private Button button;
-    private bool isSelected = false;
+    public bool isSelected = false;
 
     private void Start()
     {

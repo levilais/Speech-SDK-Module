@@ -29,7 +29,6 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         }
         else
         {
-            outputText = LunarcomController.lunarcomController.outputText;
             micPermissionGranted = true;
         }
 
@@ -38,13 +37,15 @@ public class LunarcomIntentRecognizer : MonoBehaviour
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
     {
+        Debug.Log("handle on select called");
         if (recognitionMode == RecognitionMode.Intent_Recognizer)
         {
-            recognizedString = "Say something...";
             BeginRecognizing();
+            recognizedString = "Say something...";
         }
         else
         {
+            Debug.Log("intent recognizer being set to null");
             recognizer = null;
         }
     }
@@ -76,7 +77,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
             recognizer = new IntentRecognizer(config);
 
             var model = LanguageUnderstandingModel.FromAppId(LUISAppID);
-            recognizer.AddIntent(model, "PressButton", "?");
+            recognizer.AddIntent(model, "PressButton", "button");
             recognizer.AddIntent(model, "None", "none");
 
             if (recognizer != null)
@@ -93,64 +94,67 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     }
 
     #region Speech Recognition Event Handlers
-    private void SessionStartedHandler(object sender, SessionEventArgs e)
-    {
-        UnityEngine.Debug.Log("SessionStartedHandler called");
-    }
-    private void SessionStoppedHandler(object sender, SessionEventArgs e)
-    {
-        UnityEngine.Debug.Log("SessionStoppedHandler called");
-    }
-
     private void RecognizingHandler(object sender, IntentRecognitionEventArgs e)
     {
-        if (e.Result.Reason == ResultReason.RecognizingSpeech)
-        {
-            lock (threadLocker)
-            {
-                recognizedString = $"{e.Result.Text}";
-            }
-        }
-        UnityEngine.Debug.Log("Recognizing Handler called");
+        Debug.Log("Recognizing is being called");
+        //if (e.Result.Reason == ResultReason.RecognizingIntent)
+        //{
+        //    lock (threadLocker)
+        //    {
+        //        recognizedString = $"{e.Result.Text}";
+        //    }
+        //}
+       
     }
 
     private void RecognizedHandler(object sender, IntentRecognitionEventArgs e)
     {
-        UnityEngine.Debug.Log("Recognized Handler called");
-        if (e.Result.Reason == ResultReason.RecognizingSpeech)
+        Debug.Log("Recognized Handler called");
+
+        if (e.Result.Reason == ResultReason.RecognizedIntent)
         {
-            lock (threadLocker)
-            {
+            //lock (threadLocker)
+            //{
                 recognizedString = $"{e.Result.Text}";
-            }
+            //}
         }
         else if (e.Result.Reason == ResultReason.NoMatch)
         {
-            UnityEngine.Debug.Log("No Match Found");
+            Debug.Log("No Match Found");
         }
     }
 
     private void SpeechStartDetected(object sender, RecognitionEventArgs e)
     {
-        UnityEngine.Debug.Log("SpeechStart Handler called");
+        //UnityEngine.Debug.Log("SpeechStart Handler called");
     }
 
     private void SpeechEndDetectedHandler(object sender, RecognitionEventArgs e)
     {
-        UnityEngine.Debug.Log("SpeechStart Handler called");
+        
+        //UnityEngine.Debug.Log("SpeechStart Handler called");
     }
 
     private void CancelHandler(object sender, IntentRecognitionCanceledEventArgs e)
     {
-        UnityEngine.Debug.Log("SpeechEndDetectedHandler called");
+        //UnityEngine.Debug.Log("SpeechEndDetectedHandler called");
+    }
+    private void SessionStartedHandler(object sender, SessionEventArgs e)
+    {
+        //UnityEngine.Debug.Log("SessionStartedHandler called");
+    }
+    private void SessionStoppedHandler(object sender, SessionEventArgs e)
+    {
+        //UnityEngine.Debug.Log("SessionStoppedHandler called");
+
     }
     #endregion
 
     private void Update()
     {
-        if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Speech_Recognizer)
+        if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Intent_Recognizer)
         {
-            outputText.text = recognizedString;
+            LunarcomController.lunarcomController.outputText.text = recognizedString;
         }
     }
 }
