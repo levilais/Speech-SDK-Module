@@ -6,8 +6,7 @@ using UnityEngine.UI;
 public class LunarcomButtonController : MonoBehaviour
 {
     [Header("Reference Objects")]
-    public SpeechRecognitionMode speechRecognitionMode = SpeechRecognitionMode.Disabled;
-    public LunarcomSpeechRecognizer lunarcomSpeechRecognizer;
+    public RecognitionMode speechRecognitionMode = RecognitionMode.Disabled;
 
     [Space(6)]
     [Header("Button States")]
@@ -26,23 +25,14 @@ public class LunarcomButtonController : MonoBehaviour
     {
         if (isSelected)
         {
-            foreach (Transform button in transform.parent)
-            {
-                button.GetComponent<LunarcomButtonController>().DeselectButton();
-            }
-
-            lunarcomSpeechRecognizer.SelectMode(SpeechRecognitionMode.Disabled);
-        } else
+            DeselectButton();
+        }
+        else
         {
-            foreach (Transform button in transform.parent)
-            {
-                button.GetComponent<LunarcomButtonController>().DeselectButton();
-            }
-
             button.image.sprite = Activated;
             isSelected = true;
-            lunarcomSpeechRecognizer.SetActiveButton(GetComponent<LunarcomButtonController>());
-            lunarcomSpeechRecognizer.SelectMode(speechRecognitionMode);
+            LunarcomController.lunarcomController.SetActiveButton(GetComponent<LunarcomButtonController>());
+            LunarcomController.lunarcomController.SelectMode(speechRecognitionMode);
         }
     }
 
@@ -50,6 +40,6 @@ public class LunarcomButtonController : MonoBehaviour
     {
         button.image.sprite = Default;
         isSelected = false;
-        lunarcomSpeechRecognizer.SelectMode(SpeechRecognitionMode.Disabled);
+        LunarcomController.lunarcomController.SelectMode(RecognitionMode.Disabled);
     }
 }

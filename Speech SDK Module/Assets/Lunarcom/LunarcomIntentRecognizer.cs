@@ -1,18 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Intent;
 
-public class LunarcomSpeechRecognizer : MonoBehaviour
+public class LunarcomIntentRecognizer : MonoBehaviour
 {
-    [Header("Speech SDK Credentials")]
-    public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
-    public string SpeechServiceRegion = "westus";
+    [Header("LUIS Credentials")]
+    public string LUISKey = "fa2db4721c3344ef9b98f62b808782f3";
+    public string LUISRegion = "westus";
+    public string LUISAppID = "6a1bc995-6b04-4831-83b7-430fae70f7df";
 
     private Text outputText;
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
 
-    private SpeechRecognizer recognizer;
+    private IntentRecognizer recognizer;
 
     private bool micPermissionGranted = false;
     private bool scanning = false;
@@ -23,7 +25,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.outputText == null)
         {
-            UnityEngine.Debug.LogError("outputText property is null! Assign a UI Text element to it.");
+            Debug.LogError("outputText property is null! Assign a UI Text element to it.");
         }
         else
         {
@@ -36,7 +38,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
     {
-        if (recognitionMode == RecognitionMode.Speech_Recognizer)
+        if (recognitionMode == RecognitionMode.Intent_Recognizer)
         {
             recognizedString = "Say something...";
             BeginRecognizing();
@@ -51,7 +53,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (micPermissionGranted)
         {
-            UnityEngine.Debug.LogFormat("Starting Continuous Speech Recognition");
+            Debug.LogFormat("Starting Continuous Speech Recognition");
             CreateSpeechRecognizer();
 
             if (recognizer != null)
@@ -70,9 +72,13 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (recognizer == null)
         {
-            SpeechConfig config = SpeechConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
-            config.SpeechRecognitionLanguage = fromLanguage;
-            recognizer = new SpeechRecognizer(config);
+            SpeechConfig config = SpeechConfig.FromSubscription(LUISKey, LUISRegion);
+            recognizer = new IntentRecognizer(config);
+
+            var model = LanguageUnderstandingModel.FromAppId(LUISAppID);
+            recognizer.AddIntent(model, "PressButton", "?");
+            recognizer.AddIntent(model, "None", "none");
+
             if (recognizer != null)
             {
                 recognizer.Recognizing += RecognizingHandler;
@@ -96,7 +102,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         UnityEngine.Debug.Log("SessionStoppedHandler called");
     }
 
-    private void RecognizingHandler(object sender, SpeechRecognitionEventArgs e)
+    private void RecognizingHandler(object sender, IntentRecognitionEventArgs e)
     {
         if (e.Result.Reason == ResultReason.RecognizingSpeech)
         {
@@ -108,7 +114,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         UnityEngine.Debug.Log("Recognizing Handler called");
     }
 
-    private void RecognizedHandler(object sender, SpeechRecognitionEventArgs e)
+    private void RecognizedHandler(object sender, IntentRecognitionEventArgs e)
     {
         UnityEngine.Debug.Log("Recognized Handler called");
         if (e.Result.Reason == ResultReason.RecognizingSpeech)
@@ -134,7 +140,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         UnityEngine.Debug.Log("SpeechStart Handler called");
     }
 
-    private void CancelHandler(object sender, RecognitionEventArgs e)
+    private void CancelHandler(object sender, IntentRecognitionCanceledEventArgs e)
     {
         UnityEngine.Debug.Log("SpeechEndDetectedHandler called");
     }
@@ -148,5 +154,3 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         }
     }
 }
-
-

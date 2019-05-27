@@ -638,9 +638,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpeechServiceAPIKey: febaa5534609486b852704fcffbf1d2a
   SpeechServiceRegion: westus
+  LUISKey: fa2db4721c3344ef9b98f62b808782f3
+  LUISRegion: westus
+  LUISAppID: 6a1bc995-6b04-4831-83b7-430fae70f7df
   outputText: {fileID: 675509981}
   SpecificityRequired: 0
-  EnableDeviceAsBackup: 1
+  EnableOfflineRecognition: 1
   KeywordLaunchEnabled: 0
 --- !u!1 &993210577
 GameObject:
@@ -1384,7 +1387,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 112, y: 12}
+  m_AnchoredPosition: {x: 61, y: 12}
   m_SizeDelta: {x: 36, y: 36}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2052853730
@@ -1530,7 +1533,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 61, y: 12}
+  m_AnchoredPosition: {x: 112, y: 12}
   m_SizeDelta: {x: 36, y: 36}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2087333768

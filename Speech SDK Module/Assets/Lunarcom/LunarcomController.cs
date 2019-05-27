@@ -1,7 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+
+public enum RecognitionMode { Speech_Recognizer, Intent_Recognizer, Tralation_Recognizer, Disabled };
+public enum SpecificityRequired { Exact, Intent };
+public enum EnableOfflineRecognition { Enabled, Disabled };
 
 public class LunarcomController : MonoBehaviour
 {
@@ -10,10 +12,29 @@ public class LunarcomController : MonoBehaviour
     // Key 1: 37b71e1e68fd497aa06367bb75bd2351
     // Key 2: febaa5534609486b852704fcffbf1d2a
 
-    [Header("Connection Light References")]
+    [Header("Object References")]
+    public Text outputText;
     public Sprite connectedLight;
     public Sprite disconnectedLight;
     public Image connectionLight;
+    public GameObject micButton;
+    public GameObject satelliteButton;
+    public GameObject rocketButton;
+
+    [Space(6)]
+    [Header("Runtime Variables")]
+    public RecognitionMode speechRecognitionMode = RecognitionMode.Disabled;
+
+    public delegate void OnSelectRecognitionMode(RecognitionMode selectedMode);
+    public event OnSelectRecognitionMode onSelectRecognitionMode;
+
+    [Space(6)]
+    [Header("Lunarcom Settings")]
+    public SpecificityRequired SpecificityRequired = SpecificityRequired.Exact;
+    public EnableOfflineRecognition EnableOfflineRecognition = EnableOfflineRecognition.Disabled;
+    public bool KeywordLaunchEnabled = false;
+
+    private LunarcomButtonController activeButton = null;
 
     private void Awake()
     {
@@ -26,7 +47,28 @@ public class LunarcomController : MonoBehaviour
 
     private void Start()
     {
+        if (GetComponent<LunarcomTranslationRecognizer>())
+        {
+            satelliteButton.SetActive(true);
+        }
+
+        if (GetComponent<LunarcomIntentRecognizer>())
+        {
+            rocketButton.SetActive(true);
+        }
+
         ShowConnected();
+    }
+
+    public void SetActiveButton(LunarcomButtonController buttonToSetActive)
+    {
+        activeButton = buttonToSetActive;
+    }
+
+    public void SelectMode(RecognitionMode speechRecognitionModeToSet)
+    {
+        speechRecognitionMode = speechRecognitionModeToSet;
+        onSelectRecognitionMode(speechRecognitionMode);
     }
 
     public void ShowConnected()
