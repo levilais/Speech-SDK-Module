@@ -41,7 +41,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         if (recognitionMode == RecognitionMode.Intent_Recognizer)
         {
             BeginRecognizing();
-            recognizedString = "Say something...";
+            //recognizedString = "Say something...";
         }
         else
         {
@@ -96,6 +96,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     #region Speech Recognition Event Handlers
     private void RecognizingHandler(object sender, IntentRecognitionEventArgs e)
     {
+
         Debug.Log("Recognizing is being called");
         //if (e.Result.Reason == ResultReason.RecognizingIntent)
         //{
@@ -111,41 +112,41 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     {
         Debug.Log("Recognized Handler called");
 
-        if (e.Result.Reason == ResultReason.RecognizedIntent)
-        {
-            //lock (threadLocker)
-            //{
-                recognizedString = $"{e.Result.Text}";
-            //}
-        }
-        else if (e.Result.Reason == ResultReason.NoMatch)
-        {
-            Debug.Log("No Match Found");
-        }
+        //if (e.Result.Reason == ResultReason.RecognizedIntent)
+        //{
+        //    //lock (threadLocker)
+        //    //{
+        //        recognizedString = $"{e.Result.Text}";
+        //    //}
+        //}
+        //else if (e.Result.Reason == ResultReason.NoMatch)
+        //{
+        //    Debug.Log("No Match Found");
+        //}
     }
 
     private void SpeechStartDetected(object sender, RecognitionEventArgs e)
     {
-        //UnityEngine.Debug.Log("SpeechStart Handler called");
+        UnityEngine.Debug.Log("SpeechStart Handler called");
     }
 
     private void SpeechEndDetectedHandler(object sender, RecognitionEventArgs e)
     {
         
-        //UnityEngine.Debug.Log("SpeechStart Handler called");
+        UnityEngine.Debug.Log("SpeechStart Handler called");
     }
 
     private void CancelHandler(object sender, IntentRecognitionCanceledEventArgs e)
     {
-        //UnityEngine.Debug.Log("SpeechEndDetectedHandler called");
+        UnityEngine.Debug.Log("SpeechEndDetectedHandler called");
     }
     private void SessionStartedHandler(object sender, SessionEventArgs e)
     {
-        //UnityEngine.Debug.Log("SessionStartedHandler called");
+        UnityEngine.Debug.Log("SessionStartedHandler called");
     }
     private void SessionStoppedHandler(object sender, SessionEventArgs e)
     {
-        //UnityEngine.Debug.Log("SessionStoppedHandler called");
+        UnityEngine.Debug.Log("SessionStoppedHandler called");
 
     }
     #endregion
