@@ -92,21 +92,26 @@ public class LunarcomController : MonoBehaviour
 
     public void HideTerminal()
     {
-        foreach (LunarcomButtonController button in lunarcomButtons)
+        if (Terminal.activeSelf)
         {
-            if (button.isSelected)
+            foreach (LunarcomButtonController button in lunarcomButtons)
             {
-                button.DeselectButton();
+                if (button.isSelected)
+                {
+                    button.ShowNotSelected();
+                }
             }
-        }
 
-        Terminal.SetActive(false);
-        outputText.text = "Select a mode to begin.";
+            outputText.text = "Select a mode to begin.";
+            Debug.Log("Hiding terminal");
+            Terminal.SetActive(false);
+            SelectMode(RecognitionMode.Disabled);
+        }
     }
 
     public void UpdateLunarcomText(string textToUpdate)
     {
-        if (!textToUpdate.Contains(DismissWord.ToLower()))
+        if (!textToUpdate.ToLower().Contains(DismissWord.ToLower()))
         {
             outputText.text = textToUpdate;
         } else

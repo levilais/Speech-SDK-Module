@@ -36,10 +36,15 @@ public class LunarcomButtonController : MonoBehaviour
         }
     }
 
-    public void DeselectButton()
+    public void ShowNotSelected()
     {
         button.image.sprite = Default;
         isSelected = false;
+    }
+
+    public void DeselectButton()
+    {
+        ShowNotSelected();
         LunarcomController.lunarcomController.SelectMode(RecognitionMode.Disabled);
     }
 }

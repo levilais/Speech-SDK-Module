@@ -44,6 +44,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
                 recognizer.StopContinuousRecognitionAsync();
             } 
             recognizer = null;
+            recognizedString = "";
         }
     }
 
@@ -93,6 +94,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     private void SessionStoppedHandler(object sender, SessionEventArgs e)
     {
         Debug.Log("SessionStoppedHandler called");
+        recognizer = null;
     }
 
     private void RecognizingHandler(object sender, SpeechRecognitionEventArgs e)
@@ -143,7 +145,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Speech_Recognizer)
         {
-            LunarcomController.lunarcomController.UpdateLunarcomText(recognizedString);          
+            LunarcomController.lunarcomController.UpdateLunarcomText(recognizedString);
         }
     }
 }

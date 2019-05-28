@@ -46,6 +46,7 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
                 recognizer.StopContinuousRecognitionAsync();
             }
             recognizer = null;
+            recognizedString = "";
         }
     }
 
@@ -94,13 +95,14 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
         {
             if (LunarcomController.lunarcomController.Terminal.activeSelf)
             {
-                if (recognizedString.Contains(LunarcomController.lunarcomController.DismissWord.ToLower()))
+                if (recognizedString.ToLower().Contains(LunarcomController.lunarcomController.DismissWord.ToLower()))
                 {
                     LunarcomController.lunarcomController.HideTerminal();
                 }
             } else
             {
-                if (recognizedString.Contains(LunarcomController.lunarcomController.WakeWord.ToLower()))
+                Debug.Log("recognizing string = " + recognizedString);
+                if (recognizedString.ToLower().Contains(LunarcomController.lunarcomController.WakeWord.ToLower()))
                 {
                     LunarcomController.lunarcomController.ShowTerminal();
                 }

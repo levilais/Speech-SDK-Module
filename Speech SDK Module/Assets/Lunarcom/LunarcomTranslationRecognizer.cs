@@ -48,6 +48,8 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
                 translator.StopContinuousRecognitionAsync();
             }
             translator = null;
+            recognizedString = "";
+            translatedString = "";
         }
     }
 
