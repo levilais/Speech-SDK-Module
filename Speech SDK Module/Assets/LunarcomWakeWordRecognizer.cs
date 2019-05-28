@@ -7,10 +7,6 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
     public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
     public string SpeechServiceRegion = "westus";
 
-    [Space(6)]
-    [Header("Reference Objects")]
-    public GameObject Terminal;
-
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
 
@@ -33,7 +29,7 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
         }
 
         LunarcomController.lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
-        Terminal.SetActive(false);
+        LunarcomController.lunarcomController.HideTerminal();
         BeginRecognizing();
     }
 
@@ -96,7 +92,7 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Disabled)
         {
-            if (Terminal.activeSelf)
+            if (LunarcomController.lunarcomController.Terminal.activeSelf)
             {
                 if (recognizedString.Contains(LunarcomController.lunarcomController.DismissWord.ToLower()))
                 {

@@ -140,12 +140,15 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Tralation_Recognizer)
         {
-            if (translatedString != "")
+            if (recognizedString != "")
             {
-                recognizedString += "\n\nSending...\n" + translatedString;
-            }
+                LunarcomController.lunarcomController.UpdateLunarcomText(recognizedString);
 
-            LunarcomController.lunarcomController.UpdateLunarcomText(recognizedString);
+                if (translatedString != "")
+                {
+                    LunarcomController.lunarcomController.outputText.text += "\n\nSending...\n" + translatedString;
+                }
+            }
         }
     }
 }
