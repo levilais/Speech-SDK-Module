@@ -39,7 +39,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         }
         else
         {
-            Debug.Log("speech recognizer being set to null");
+            recognizer.StopContinuousRecognitionAsync();
             recognizer = null;
         }
     }

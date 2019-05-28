@@ -45,6 +45,7 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
         }
         else
         {
+            recognizer.StopContinuousRecognitionAsync();
             recognizer = null;
         }
     }
