@@ -16,10 +16,12 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
     private bool scanning = false;
 
     private string fromLanguage = "en-US";
+    private LunarcomController lunarcomController;
 
     void Start()
     {
-        if (LunarcomController.lunarcomController.outputText == null)
+        lunarcomController = LunarcomController.lunarcomController;
+        if (lunarcomController.outputText == null)
         {
             Debug.LogError("outputText property is null! Assign a UI Text element to it.");
         }
@@ -28,8 +30,8 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
             micPermissionGranted = true;
         }
 
-        LunarcomController.lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
-        LunarcomController.lunarcomController.HideTerminal();
+        lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
+        lunarcomController.HideTerminal();
         BeginRecognizing();
     }
 
@@ -79,7 +81,6 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
 
     private void RecognizingHandler(object sender, SpeechRecognitionEventArgs e)
     {
-        Debug.Log("recognizing...");
         if (e.Result.Reason == ResultReason.RecognizingSpeech)
         {
             lock (threadLocker)
@@ -91,20 +92,19 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
 
     private void Update()
     {
-        if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Disabled)
+        if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Disabled)
         {
-            if (LunarcomController.lunarcomController.Terminal.activeSelf)
+            if (lunarcomController.Terminal.activeSelf)
             {
                 if (recognizedString.ToLower().Contains(LunarcomController.lunarcomController.DismissWord.ToLower()))
                 {
-                    LunarcomController.lunarcomController.HideTerminal();
+                    lunarcomController.HideTerminal();
                 }
             } else
             {
-                Debug.Log("recognizing string = " + recognizedString);
-                if (recognizedString.ToLower().Contains(LunarcomController.lunarcomController.WakeWord.ToLower()))
+                if (recognizedString.ToLower().Contains(lunarcomController.WakeWord.ToLower()))
                 {
-                    LunarcomController.lunarcomController.ShowTerminal();
+                    lunarcomController.ShowTerminal();
                 }
             }
         }

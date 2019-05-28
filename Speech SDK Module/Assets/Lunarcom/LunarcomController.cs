@@ -32,8 +32,8 @@ public class LunarcomController : MonoBehaviour
     public string WakeWord = "Activate Lunarcom";
     public string DismissWord = "Hide Lunarcom";
 
-    public RecognitionMode speechRecognitionMode = RecognitionMode.Disabled;
-    private LunarcomButtonController activeButton = null;
+    RecognitionMode speechRecognitionMode = RecognitionMode.Disabled;
+    LunarcomButtonController activeButton = null;
 
     private void Awake()
     {
@@ -69,6 +69,11 @@ public class LunarcomController : MonoBehaviour
         }
     }
 
+    public RecognitionMode CurrentRecognitionMode()
+    {
+        return speechRecognitionMode;
+    }
+
     public void SetActiveButton(LunarcomButtonController buttonToSetActive)
     {
         activeButton = buttonToSetActive;
@@ -96,7 +101,7 @@ public class LunarcomController : MonoBehaviour
         {
             foreach (LunarcomButtonController button in lunarcomButtons)
             {
-                if (button.isSelected)
+                if (button.GetIsSelected())
                 {
                     button.ShowNotSelected();
                 }

@@ -17,9 +17,13 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
 
     private string fromLanguage = "en-US";
 
+    private LunarcomController lunarcomController;
+
     void Start()
     {
-        if (LunarcomController.lunarcomController.outputText == null)
+        lunarcomController = LunarcomController.lunarcomController;
+
+        if (lunarcomController.outputText == null)
         {
             Debug.LogError("outputText property is null! Assign a UI Text element to it.");
         }
@@ -28,7 +32,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
             micPermissionGranted = true;
         }
 
-        LunarcomController.lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
+        lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
     }
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
@@ -143,9 +147,9 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
 
     private void Update()
     {
-        if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Speech_Recognizer)
+        if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Speech_Recognizer)
         {
-            LunarcomController.lunarcomController.UpdateLunarcomText(recognizedString);
+            lunarcomController.UpdateLunarcomText(recognizedString);
         }
     }
 }
