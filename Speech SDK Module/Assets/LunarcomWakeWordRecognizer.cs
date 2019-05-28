@@ -9,7 +9,7 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
 
     [Space(6)]
     [Header("Reference Objects")]
-    public GameObject Lunarcom;
+    public GameObject Terminal;
 
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
@@ -33,15 +33,16 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
         }
 
         LunarcomController.lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
+        Terminal.SetActive(false);
     }
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
     {
         if (recognitionMode == RecognitionMode.Disabled)
         {
-            if (Lunarcom.activeSelf)
+            if (Terminal.activeSelf)
             {
-                Lunarcom.SetActive(false);
+                Terminal.SetActive(false);
             }
 
             BeginRecognizing();
@@ -95,7 +96,7 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Disabled)
         {
             if (recognizedString.Contains(LunarcomController.lunarcomController.WakeWord.ToLower())) {
-                Lunarcom.SetActive(true);
+                Terminal.SetActive(true);
             }
         }
     }
