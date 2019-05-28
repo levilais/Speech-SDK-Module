@@ -39,7 +39,10 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         }
         else
         {
-            recognizer.StopContinuousRecognitionAsync();
+            if (recognizer != null)
+            {
+                recognizer.StopContinuousRecognitionAsync();
+            } 
             recognizer = null;
         }
     }
