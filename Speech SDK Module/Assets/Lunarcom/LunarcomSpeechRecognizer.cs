@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
 
 public class LunarcomSpeechRecognizer : MonoBehaviour
@@ -22,7 +21,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.outputText == null)
         {
-            UnityEngine.Debug.LogError("outputText property is null! Assign a UI Text element to it.");
+            Debug.LogError("outputText property is null! Assign a UI Text element to it.");
         }
         else
         {
@@ -37,7 +36,6 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         if (recognitionMode == RecognitionMode.Speech_Recognizer)
         {
             BeginRecognizing();
-            recognizedString = "Say something...";
         }
         else
         {
@@ -50,7 +48,6 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (micPermissionGranted)
         {
-            UnityEngine.Debug.LogFormat("Starting Continuous Speech Recognition");
             CreateSpeechRecognizer();
 
             if (recognizer != null)
@@ -88,11 +85,11 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     #region Speech Recognition Event Handlers
     private void SessionStartedHandler(object sender, SessionEventArgs e)
     {
-        UnityEngine.Debug.Log("SessionStartedHandler called");
+        Debug.Log("SessionStartedHandler called");
     }
     private void SessionStoppedHandler(object sender, SessionEventArgs e)
     {
-        UnityEngine.Debug.Log("SessionStoppedHandler called");
+        Debug.Log("SessionStoppedHandler called");
     }
 
     private void RecognizingHandler(object sender, SpeechRecognitionEventArgs e)
@@ -104,12 +101,12 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
                 recognizedString = $"{e.Result.Text}";
             }
         }
-        UnityEngine.Debug.Log("Recognizing Handler called");
+        Debug.Log("Recognizing Handler called");
     }
 
     private void RecognizedHandler(object sender, SpeechRecognitionEventArgs e)
     {
-        UnityEngine.Debug.Log("Recognized Handler called");
+        Debug.Log("Recognized Handler called");
         if (e.Result.Reason == ResultReason.RecognizingSpeech)
         {
             lock (threadLocker)
@@ -119,23 +116,23 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         }
         else if (e.Result.Reason == ResultReason.NoMatch)
         {
-            UnityEngine.Debug.Log("No Match Found");
+            Debug.Log("No Match Found");
         }
     }
 
     private void SpeechStartDetected(object sender, RecognitionEventArgs e)
     {
-        UnityEngine.Debug.Log("SpeechStart Handler called");
+        Debug.Log("SpeechStart Handler called");
     }
 
     private void SpeechEndDetectedHandler(object sender, RecognitionEventArgs e)
     {
-        UnityEngine.Debug.Log("SpeechStart Handler called");
+        Debug.Log("SpeechStart Handler called");
     }
 
     private void CancelHandler(object sender, RecognitionEventArgs e)
     {
-        UnityEngine.Debug.Log("SpeechEndDetectedHandler called");
+        Debug.Log("SpeechEndDetectedHandler called");
     }
     #endregion
 
@@ -143,7 +140,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Speech_Recognizer)
         {
-            LunarcomController.lunarcomController.outputText.text = recognizedString;
+            LunarcomController.lunarcomController.UpdateLunarcomText(recognizedString);          
         }
     }
 }

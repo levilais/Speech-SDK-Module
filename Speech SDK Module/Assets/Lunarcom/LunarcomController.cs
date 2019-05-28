@@ -30,7 +30,8 @@ public class LunarcomController : MonoBehaviour
     [Space(6)]
     [Header("Lunarcom Settings")]
     public EnableOfflineRecognition EnableOfflineRecognition = EnableOfflineRecognition.Disabled;
-    public bool KeywordLaunchEnabled = false;
+    public string WakeWord = "Activate Lunarcom";
+    public string DismissWord = "Hide Lunarcom";
 
     private LunarcomButtonController activeButton = null;
 
@@ -55,6 +56,8 @@ public class LunarcomController : MonoBehaviour
             rocketButton.SetActive(true);
         }
 
+        SelectMode(RecognitionMode.Disabled);
+
         ShowConnected();
     }
 
@@ -72,5 +75,16 @@ public class LunarcomController : MonoBehaviour
     public void ShowConnected()
     {
         connectionLight.sprite = connectedLight;
+    }
+
+    public void UpdateLunarcomText(string textToUpdate)
+    {
+        if (!textToUpdate.Contains(DismissWord.ToLower()))
+        {
+            outputText.text = textToUpdate;
+        } else
+        {
+            SelectMode(RecognitionMode.Disabled);
+        }
     }
 }

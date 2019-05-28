@@ -41,7 +41,6 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         if (recognitionMode == RecognitionMode.Intent_Recognizer)
         {
             BeginRecognizing();
-            //recognizedString = "Say something...";
         }
         else
         {
@@ -155,7 +154,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Intent_Recognizer)
         {
-            LunarcomController.lunarcomController.outputText.text = recognizedString;
+            LunarcomController.lunarcomController.UpdateLunarcomText(recognizedString);
         }
     }
 }

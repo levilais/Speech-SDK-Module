@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Translation;
 
@@ -57,7 +56,6 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
             if (translator != null)
             {
                 await translator.StartContinuousRecognitionAsync().ConfigureAwait(false);
-                recognizedString = "Say something...";
             }
         }
         else
@@ -68,9 +66,6 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
 
     void CreateTranslationRecognizer()
     {
-        UnityEngine.Debug.LogFormat("Creating Translation Recognizer");
-        recognizedString = "Initializing speech recognition, please wait...";
-
         if (translator == null)
         {
             SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
@@ -141,11 +136,12 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Tralation_Recognizer)
         {
-            LunarcomController.lunarcomController.outputText.text = recognizedString;
             if (translatedString != "")
             {
-                LunarcomController.lunarcomController.outputText.text += "\n\nSending...\n" + translatedString;
+                recognizedString += "\n\nSending...\n" + translatedString;
             }
+
+            LunarcomController.lunarcomController.UpdateLunarcomText(recognizedString);
         }
     }
 }
