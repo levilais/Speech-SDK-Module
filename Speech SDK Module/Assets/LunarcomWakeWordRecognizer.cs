@@ -34,17 +34,13 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
 
         LunarcomController.lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
         Terminal.SetActive(false);
+        BeginRecognizing();
     }
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
     {
         if (recognitionMode == RecognitionMode.Disabled)
         {
-            if (Terminal.activeSelf)
-            {
-                Terminal.SetActive(false);
-            }
-
             BeginRecognizing();
         }
         else
@@ -82,6 +78,7 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
 
     private void RecognizingHandler(object sender, SpeechRecognitionEventArgs e)
     {
+        Debug.Log("recognizing...");
         if (e.Result.Reason == ResultReason.RecognizingSpeech)
         {
             lock (threadLocker)
@@ -95,8 +92,18 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
     {
         if (LunarcomController.lunarcomController.speechRecognitionMode == RecognitionMode.Disabled)
         {
-            if (recognizedString.Contains(LunarcomController.lunarcomController.WakeWord.ToLower())) {
-                Terminal.SetActive(true);
+            if (Terminal.activeSelf)
+            {
+                if (recognizedString.Contains(LunarcomController.lunarcomController.DismissWord.ToLower()))
+                {
+                    LunarcomController.lunarcomController.HideTerminal();
+                }
+            } else
+            {
+                if (recognizedString.Contains(LunarcomController.lunarcomController.WakeWord.ToLower()))
+                {
+                    LunarcomController.lunarcomController.ShowTerminal();
+                }
             }
         }
     }

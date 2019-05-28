@@ -627,13 +627,15 @@ MonoBehaviour:
   connectedLight: {fileID: 21300000, guid: 343ffa54498da45f3bf4d8650d8fb079, type: 3}
   disconnectedLight: {fileID: 21300000, guid: 74775a75e68cb4c65a097bdb36afb2a9, type: 3}
   connectionLight: {fileID: 114887351}
-  micButton: {fileID: 993210577}
-  satelliteButton: {fileID: 2052853728}
-  rocketButton: {fileID: 2087333766}
-  speechRecognitionMode: 3
+  lunarcomButtons:
+  - {fileID: 993210582}
+  - {fileID: 2052853730}
+  - {fileID: 2087333768}
+  Terminal: {fileID: 2043880026}
   EnableOfflineRecognition: 1
   WakeWord: Activate Terminal
   DismissWord: Hide Terminal
+  speechRecognitionMode: 3
 --- !u!114 &808446991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,7 +693,7 @@ GameObject:
   - component: {fileID: 993210579}
   - component: {fileID: 993210582}
   m_Layer: 5
-  m_Name: Mic Button
+  m_Name: Mic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1396,12 +1398,12 @@ GameObject:
   - component: {fileID: 2052853731}
   - component: {fileID: 2052853730}
   m_Layer: 5
-  m_Name: Satellite Button
+  m_Name: Satellite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2052853729
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1542,12 +1544,12 @@ GameObject:
   - component: {fileID: 2087333769}
   - component: {fileID: 2087333768}
   m_Layer: 5
-  m_Name: Rocket Button
+  m_Name: Rocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2087333767
 RectTransform:
   m_ObjectHideFlags: 0
