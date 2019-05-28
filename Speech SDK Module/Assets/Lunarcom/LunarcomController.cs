@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum RecognitionMode { Speech_Recognizer, Intent_Recognizer, Tralation_Recognizer, Disabled };
-public enum EnableOfflineRecognition { Enabled, Disabled };
+public enum SimuilateOfflineMode { Enabled, Disabled };
 
 public class LunarcomController : MonoBehaviour
 {
@@ -28,7 +28,7 @@ public class LunarcomController : MonoBehaviour
 
     [Space(6)]
     [Header("Lunarcom Settings")]
-    public EnableOfflineRecognition EnableOfflineRecognition = EnableOfflineRecognition.Disabled;
+    public SimuilateOfflineMode SimulateOfflineMode = SimuilateOfflineMode.Disabled;
     public string WakeWord = "Activate Lunarcom";
     public string DismissWord = "Hide Lunarcom";
 
@@ -49,6 +49,7 @@ public class LunarcomController : MonoBehaviour
         if (WakeWord == "")
         {
             WakeWord = "*";
+            DismissWord = "*";
         }
 
         if (DismissWord == "")

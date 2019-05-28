@@ -632,10 +632,9 @@ MonoBehaviour:
   - {fileID: 2052853730}
   - {fileID: 2087333768}
   Terminal: {fileID: 2043880026}
-  EnableOfflineRecognition: 1
+  SimulateOfflineMode: 1
   WakeWord: Activate Terminal
   DismissWord: Hide Terminal
-  speechRecognitionMode: 3
 --- !u!114 &808446991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,7 +663,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpeechServiceAPIKey: febaa5534609486b852704fcffbf1d2a
   SpeechServiceRegion: westus
-  Terminal: {fileID: 2043880026}
 --- !u!114 &808446993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -824,7 +822,6 @@ MonoBehaviour:
   speechRecognitionMode: 0
   Default: {fileID: 21300000, guid: 843492ec4b63f4b6291e10119da272fa, type: 3}
   Activated: {fileID: 21300000, guid: 0586f7cf3d0404aa786894b335381abd, type: 3}
-  isSelected: 0
 --- !u!1 &1070513512
 GameObject:
   m_ObjectHideFlags: 0
@@ -1439,7 +1436,6 @@ MonoBehaviour:
   speechRecognitionMode: 2
   Default: {fileID: 21300000, guid: da23fbff965e8424e8540718f9a416ad, type: 3}
   Activated: {fileID: 21300000, guid: c931df88ebaf6ef49a48e43541fb8d1e, type: 3}
-  isSelected: 0
 --- !u!114 &2052853731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1585,7 +1581,6 @@ MonoBehaviour:
   speechRecognitionMode: 1
   Default: {fileID: 21300000, guid: bbe7e103f7dd30d4aac8082ca78a3d42, type: 3}
   Activated: {fileID: 21300000, guid: ff177dd6dc1a7ad429e8ef2498cda2c8, type: 3}
-  isSelected: 0
 --- !u!114 &2087333769
 MonoBehaviour:
   m_ObjectHideFlags: 0
