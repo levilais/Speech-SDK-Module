@@ -31,8 +31,12 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
         }
 
         lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
-        lunarcomController.HideTerminal();
-        BeginRecognizing();
+
+        if (LunarcomController.lunarcomController.WakeWord != "" && LunarcomController.lunarcomController.WakeWord != "*")
+        {
+            lunarcomController.HideTerminal();
+            BeginRecognizing();
+        }
     }
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)

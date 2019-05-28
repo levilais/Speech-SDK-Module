@@ -46,6 +46,16 @@ public class LunarcomController : MonoBehaviour
 
     private void Start()
     {
+        if (WakeWord == "")
+        {
+            WakeWord = "*";
+        }
+
+        if (DismissWord == "")
+        {
+            DismissWord = "*";
+        }
+
         if (GetComponent<LunarcomTranslationRecognizer>())
         {
             ActivateButtonNamed("Satellite");
