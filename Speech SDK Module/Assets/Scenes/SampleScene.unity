@@ -530,6 +530,7 @@ GameObject:
   - component: {fileID: 808446992}
   - component: {fileID: 808446991}
   - component: {fileID: 808446993}
+  - component: {fileID: 808446994}
   m_Layer: 5
   m_Name: Lunarcom
   m_TagString: Untagged
@@ -632,7 +633,7 @@ MonoBehaviour:
   - {fileID: 2052853730}
   - {fileID: 2087333768}
   Terminal: {fileID: 2043880026}
-  SimulateOfflineMode: 1
+  simulateOfflineMode: 1
   WakeWord: Activate Terminal
   DismissWord: Hide Terminal
 --- !u!114 &808446991
@@ -677,6 +678,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpeechServiceAPIKey: febaa5534609486b852704fcffbf1d2a
   SpeechServiceRegion: westus
+--- !u!114 &808446994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808446985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c4ad27086de1364ab6e35c64749052f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &993210577
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using Microsoft.CognitiveServices.Speech;
 
-public class LunarcomSpeechRecognizer : MonoBehaviour
+public class LunarcomOfflineRecognizer : MonoBehaviour
 {
-    [Header("Speech SDK Credentials")]
-    public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
-    public string SpeechServiceRegion = "westus";
+    private string SpeechServiceAPIKey = "";
+    private string SpeechServiceRegion = "";
 
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
@@ -22,6 +21,8 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     void Start()
     {
         lunarcomController = LunarcomController.lunarcomController;
+        SpeechServiceAPIKey = GetComponent<LunarcomSpeechRecognizer>().SpeechServiceAPIKey;
+        SpeechServiceRegion = GetComponent<LunarcomSpeechRecognizer>().SpeechServiceRegion;
 
         if (lunarcomController.outputText == null)
         {
@@ -37,7 +38,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
     {
-        if (recognitionMode == RecognitionMode.Speech_Recognizer)
+        if (recognitionMode == RecognitionMode.Offline)
         {
             BeginRecognizing();
         }
@@ -46,7 +47,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
             if (recognizer != null)
             {
                 recognizer.StopContinuousRecognitionAsync();
-            } 
+            }
             recognizer = null;
             recognizedString = "";
         }
@@ -66,7 +67,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
         }
         else
         {
-            recognizedString = "This app cannot function without access to the microphone.";
+            Debug.Log("This app cannot function without access to the microphone.");
         }
     }
 
@@ -116,17 +117,6 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     private void RecognizedHandler(object sender, SpeechRecognitionEventArgs e)
     {
         Debug.Log("Recognized Handler called");
-        if (e.Result.Reason == ResultReason.RecognizedSpeech)
-        {
-            lock (threadLocker)
-            {
-                recognizedString = $"{e.Result.Text}";
-            }
-        }
-        else if (e.Result.Reason == ResultReason.NoMatch)
-        {
-            Debug.Log("No Match Found");
-        }
     }
 
     private void SpeechStartDetected(object sender, RecognitionEventArgs e)
@@ -147,11 +137,19 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
 
     private void Update()
     {
-        if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Speech_Recognizer)
+        if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Offline)
         {
-            lunarcomController.UpdateLunarcomText(recognizedString);
+            if (recognizedString != "" && recognizedString != "Offline Transcription:\n")
+            {
+                if (recognizedString != "Say something..." && recognizedString != "Say something...")
+                {
+                    string combinedString = "Offline Transcription:\n" + recognizedString;
+                    lunarcomController.UpdateLunarcomText(combinedString);
+                } else
+                {
+                    lunarcomController.UpdateLunarcomText(recognizedString);
+                }
+            }
         }
     }
 }
-
-

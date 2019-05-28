@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum RecognitionMode { Speech_Recognizer, Intent_Recognizer, Tralation_Recognizer, Disabled };
+public enum RecognitionMode { Speech_Recognizer, Intent_Recognizer, Tralation_Recognizer, Disabled, Offline };
 public enum SimuilateOfflineMode { Enabled, Disabled };
 
 public class LunarcomController : MonoBehaviour
@@ -28,7 +28,7 @@ public class LunarcomController : MonoBehaviour
 
     [Space(6)]
     [Header("Lunarcom Settings")]
-    public SimuilateOfflineMode SimulateOfflineMode = SimuilateOfflineMode.Disabled;
+    public SimuilateOfflineMode simulateOfflineMode = SimuilateOfflineMode.Disabled;
     public string WakeWord = "Activate Lunarcom";
     public string DismissWord = "Hide Lunarcom";
 
@@ -45,6 +45,18 @@ public class LunarcomController : MonoBehaviour
     }
 
     private void Start()
+    {
+        if (simulateOfflineMode == SimuilateOfflineMode.Disabled)
+        {
+            SetupOnlineMode();
+        }
+        else
+        {
+            SetupOfflineMode();
+        }
+    }
+
+    private void SetupOnlineMode()
     {
         if (WakeWord == "")
         {
@@ -66,16 +78,40 @@ public class LunarcomController : MonoBehaviour
         {
             ActivateButtonNamed("Rocket");
         }
-
-        // ShowConnected();
+        ShowConnected(true);
     }
 
-    private void ActivateButtonNamed(string name) {
+    private void SetupOfflineMode()
+    {
+        WakeWord = "*";
+        DismissWord = "*";
+        if (GetComponent<LunarcomWakeWordRecognizer>())
+        {
+            GetComponent<LunarcomWakeWordRecognizer>().enabled = false;
+        }
+        if (GetComponent<LunarcomSpeechRecognizer>())
+        {
+            GetComponent<LunarcomSpeechRecognizer>().enabled = false;
+        }
+        if (GetComponent<LunarcomTranslationRecognizer>())
+        {
+            GetComponent<LunarcomTranslationRecognizer>().enabled = false;
+            ActivateButtonNamed("Satellite", false);
+        }
+        if (GetComponent<LunarcomIntentRecognizer>())
+        {
+            GetComponent<LunarcomIntentRecognizer>().enabled = false;
+            ActivateButtonNamed("Rocket", false);
+        }
+        ShowConnected(false);
+    }
+
+    private void ActivateButtonNamed(string name, bool makeActive = true) {
         foreach (LunarcomButtonController button in lunarcomButtons)
         {
             if (button.gameObject.name == name)
             {
-                button.gameObject.SetActive(true);
+                button.gameObject.SetActive(makeActive);
             }
         }
     }
@@ -88,6 +124,13 @@ public class LunarcomController : MonoBehaviour
     public void SetActiveButton(LunarcomButtonController buttonToSetActive)
     {
         activeButton = buttonToSetActive;
+        foreach (LunarcomButtonController button in lunarcomButtons)
+        {
+            if (button != activeButton && button.GetIsSelected())
+            {
+                button.ShowNotSelected();
+            }
+        }
     }
 
     public void SelectMode(RecognitionMode speechRecognitionModeToSet)
@@ -96,9 +139,15 @@ public class LunarcomController : MonoBehaviour
         onSelectRecognitionMode(speechRecognitionMode);
     }
 
-    public void ShowConnected()
+    public void ShowConnected(bool showConnected)
     {
-        connectionLight.sprite = connectedLight;
+        if (showConnected)
+        {
+            connectionLight.sprite = connectedLight;
+        } else
+        {
+            connectionLight.sprite = disconnectedLight;
+        }
     }
 
     public void ShowTerminal()
