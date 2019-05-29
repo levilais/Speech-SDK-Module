@@ -3,11 +3,6 @@ using Microsoft.CognitiveServices.Speech;
 
 public class LunarcomWakeWordRecognizer : MonoBehaviour
 {
-    [Header("Speech SDK Credentials")]
-    public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
-    public string SpeechServiceRegion = "westus";
-
-    [Space(6)]
     [Header("Lunar Launcher Buttons")]
     public string WakeWord = "Activate Terminal";
     public string DismissWord = "Hide Terminal";
@@ -85,7 +80,7 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
     {
         if (recognizer == null)
         {
-            SpeechConfig config = SpeechConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+            SpeechConfig config = SpeechConfig.FromSubscription(lunarcomController.SpeechServiceAPIKey, lunarcomController.SpeechServiceRegion);
             config.SpeechRecognitionLanguage = fromLanguage;
             recognizer = new SpeechRecognizer(config);
             if (recognizer != null)

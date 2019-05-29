@@ -4,9 +4,7 @@ using Microsoft.CognitiveServices.Speech.Translation;
 
 public class LunarcomTranslationRecognizer : MonoBehaviour
 {
-    [Header("Speech SDK Credentials")]
-    public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
-    public string SpeechServiceRegion = "westus";
+    public TranslateToLanguage TargetLanguage = TranslateToLanguage.Russian;
 
     private string recognizedString = "Select a mode to begin.";
     private string translatedString = "";
@@ -18,7 +16,8 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
     private bool scanning = false;
 
     private string fromLanguage = "en-US";
-    private string toLanguage = "ru-RU";
+    private string toLanguage = "";
+
     private LunarcomController lunarcomController;
 
     void Start()
@@ -35,6 +34,19 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
         }
 
         lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
+
+        switch (TargetLanguage)
+        {
+            case TranslateToLanguage.Russian:
+                toLanguage = "ru-RU";
+                break;
+            case TranslateToLanguage.German:
+                toLanguage = "de-DE";
+                break;
+            case TranslateToLanguage.Chinese:
+                toLanguage = "zh-HK";
+                break; 
+        }
     }
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
@@ -77,7 +89,7 @@ public class LunarcomTranslationRecognizer : MonoBehaviour
     {
         if (translator == null)
         {
-            SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+            SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(lunarcomController.SpeechServiceAPIKey, lunarcomController.SpeechServiceRegion);
             config.SpeechRecognitionLanguage = fromLanguage;
             config.AddTargetLanguage(toLanguage);
 

@@ -3,10 +3,6 @@ using Microsoft.CognitiveServices.Speech;
 
 public class LunarcomSpeechRecognizer : MonoBehaviour
 {
-    [Header("Speech SDK Credentials")]
-    public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
-    public string SpeechServiceRegion = "westus";
-
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
 
@@ -74,7 +70,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (recognizer == null)
         {
-            SpeechConfig config = SpeechConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+            SpeechConfig config = SpeechConfig.FromSubscription(lunarcomController.SpeechServiceAPIKey, lunarcomController.SpeechServiceRegion);
             config.SpeechRecognitionLanguage = fromLanguage;
             recognizer = new SpeechRecognizer(config);
             if (recognizer != null)
@@ -149,7 +145,10 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
     {
         if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Speech_Recognizer)
         {
-            lunarcomController.UpdateLunarcomText(recognizedString);
+            if (recognizedString != "")
+            {
+                lunarcomController.UpdateLunarcomText(recognizedString);
+            }
         }
     }
 }

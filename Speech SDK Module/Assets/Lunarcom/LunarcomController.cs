@@ -4,16 +4,20 @@ using UnityEngine.UI;
 
 public enum RecognitionMode { Speech_Recognizer, Intent_Recognizer, Tralation_Recognizer, Disabled, Offline };
 public enum SimuilateOfflineMode { Enabled, Disabled };
+public enum TranslateToLanguage { Russian, German, Chinese };
 
 public class LunarcomController : MonoBehaviour
 {
     public static LunarcomController lunarcomController = null;
-    // https://westus.api.cognitive.microsoft.com/sts/v1.0
-    // Key 1: 37b71e1e68fd497aa06367bb75bd2351
-    // Key 2: febaa5534609486b852704fcffbf1d2a
 
+    [Header("Speech SDK Credentials")]
+    public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
+    public string SpeechServiceRegion = "westus";
+
+    [Space(6)]
     [Header("Object References")]
     public Text outputText;
+    public GameObject Terminal;
     public Sprite connectedLight;
     public Sprite disconnectedLight;
     public Image connectionLight;
@@ -21,7 +25,6 @@ public class LunarcomController : MonoBehaviour
     [Space(6)]
     [Header("Lunarcom Buttons")]
     public List<LunarcomButtonController> lunarcomButtons;
-    public GameObject Terminal;
 
     public delegate void OnSelectRecognitionMode(RecognitionMode selectedMode);
     public event OnSelectRecognitionMode onSelectRecognitionMode;
@@ -42,6 +45,10 @@ public class LunarcomController : MonoBehaviour
 
     private void Start()
     {
+        if (GetComponent<LunarcomWakeWordRecognizer>())
+        {
+            lunarcomWakeWordRecognizer = GetComponent<LunarcomWakeWordRecognizer>();
+        }
         if (GetComponent<LunarcomOfflineRecognizer>())
         {
             lunarcomOfflineRecognizer = GetComponent<LunarcomOfflineRecognizer>();
@@ -57,11 +64,15 @@ public class LunarcomController : MonoBehaviour
         {
             SetupOnlineMode();
         }
+    }
 
-        if (GetComponent<LunarcomWakeWordRecognizer>())
+    public bool IsOfflineMode()
+    {
+        if (lunarcomOfflineRecognizer != null)
         {
-            lunarcomWakeWordRecognizer = GetComponent<LunarcomWakeWordRecognizer>();
+            return lunarcomOfflineRecognizer.simulateOfflineMode == SimuilateOfflineMode.Enabled;
         }
+        return false;
     }
 
     private void SetupOnlineMode()
@@ -120,6 +131,7 @@ public class LunarcomController : MonoBehaviour
             GetComponent<LunarcomIntentRecognizer>().enabled = false;
             ActivateButtonNamed("Rocket", false);
         }
+
         ShowConnected(false);
     }
 

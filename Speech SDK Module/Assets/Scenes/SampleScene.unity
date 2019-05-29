@@ -527,10 +527,10 @@ GameObject:
   - component: {fileID: 808446987}
   - component: {fileID: 808446986}
   - component: {fileID: 808446990}
-  - component: {fileID: 808446992}
   - component: {fileID: 808446991}
-  - component: {fileID: 808446993}
+  - component: {fileID: 808446992}
   - component: {fileID: 808446994}
+  - component: {fileID: 808446993}
   - component: {fileID: 808446995}
   m_Layer: 5
   m_Name: Lunarcom
@@ -625,7 +625,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bf3e71ff76a64ce6a63dc8529f51307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpeechServiceAPIKey: febaa5534609486b852704fcffbf1d2a
+  SpeechServiceRegion: westus
   outputText: {fileID: 675509981}
+  Terminal: {fileID: 2043880026}
   connectedLight: {fileID: 21300000, guid: 343ffa54498da45f3bf4d8650d8fb079, type: 3}
   disconnectedLight: {fileID: 21300000, guid: 74775a75e68cb4c65a097bdb36afb2a9, type: 3}
   connectionLight: {fileID: 114887351}
@@ -633,7 +636,6 @@ MonoBehaviour:
   - {fileID: 993210582}
   - {fileID: 2052853730}
   - {fileID: 2087333768}
-  Terminal: {fileID: 2043880026}
 --- !u!114 &808446991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,8 +648,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3985d65531502340bdfef76ff037a72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpeechServiceAPIKey: febaa5534609486b852704fcffbf1d2a
-  SpeechServiceRegion: westus
 --- !u!114 &808446992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,8 +660,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f481c39f08d40e49bd8eb86db121e8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpeechServiceAPIKey: febaa5534609486b852704fcffbf1d2a
-  SpeechServiceRegion: westus
   WakeWord: Activate Terminal
   DismissWord: Hide Terminal
 --- !u!114 &808446993
@@ -676,8 +674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a2f6cd1254a8f247b41f2df29ac50c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpeechServiceAPIKey: febaa5534609486b852704fcffbf1d2a
-  SpeechServiceRegion: westus
+  TargetLanguage: 0
 --- !u!114 &808446994
 MonoBehaviour:
   m_ObjectHideFlags: 0

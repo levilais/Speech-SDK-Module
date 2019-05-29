@@ -6,9 +6,6 @@ public class LunarcomOfflineRecognizer : MonoBehaviour
     [Header("Lunarcom Settings")]
     public SimuilateOfflineMode simulateOfflineMode = SimuilateOfflineMode.Disabled;
 
-    private string SpeechServiceAPIKey = "";
-    private string SpeechServiceRegion = "";
-
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
 
@@ -24,9 +21,7 @@ public class LunarcomOfflineRecognizer : MonoBehaviour
     void Start()
     {
         lunarcomController = LunarcomController.lunarcomController;
-        SpeechServiceAPIKey = GetComponent<LunarcomSpeechRecognizer>().SpeechServiceAPIKey;
-        SpeechServiceRegion = GetComponent<LunarcomSpeechRecognizer>().SpeechServiceRegion;
-
+        
         if (lunarcomController.outputText == null)
         {
             Debug.LogError("outputText property is null! Assign a UI Text element to it.");
@@ -78,7 +73,7 @@ public class LunarcomOfflineRecognizer : MonoBehaviour
     {
         if (recognizer == null)
         {
-            SpeechConfig config = SpeechConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+            SpeechConfig config = SpeechConfig.FromSubscription(lunarcomController.SpeechServiceAPIKey, lunarcomController.SpeechServiceRegion);
             config.SpeechRecognitionLanguage = fromLanguage;
             recognizer = new SpeechRecognizer(config);
             if (recognizer != null)
@@ -140,11 +135,14 @@ public class LunarcomOfflineRecognizer : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(lunarcomController.CurrentRecognitionMode());
         if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Offline)
         {
+            Debug.Log("Now offline mode");
             if (recognizedString != "" && recognizedString != "Offline Transcription:\n")
             {
-                if (recognizedString != "Say something..." && recognizedString != "Say something...")
+                Debug.Log("recognized string isn't blank and it's not Offline Transcription");
+                if (recognizedString != "Say something..." && recognizedString != "Select a mode to begin.")
                 {
                     string combinedString = "Offline Transcription:\n" + recognizedString;
                     lunarcomController.UpdateLunarcomText(combinedString);
