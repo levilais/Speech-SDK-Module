@@ -40,10 +40,19 @@ public class LunarcomButtonController : MonoBehaviour
             button.image.sprite = Activated;
             isSelected = true;
             lunarcomController.SetActiveButton(GetComponent<LunarcomButtonController>());
-            if (lunarcomController.simulateOfflineMode == SimuilateOfflineMode.Enabled)
+
+            if (GetComponent<LunarcomOfflineRecognizer>())
             {
-                lunarcomController.SelectMode(RecognitionMode.Offline);
-            } else
+                LunarcomOfflineRecognizer lunarcomOfflineRecognizer = GetComponent<LunarcomOfflineRecognizer>();
+                if (lunarcomOfflineRecognizer.simulateOfflineMode == SimuilateOfflineMode.Enabled)
+                {
+                    lunarcomController.SelectMode(RecognitionMode.Offline);
+                }
+                else
+                {
+                    lunarcomController.SelectMode(speechRecognitionMode);
+                }
+            } else 
             {
                 lunarcomController.SelectMode(speechRecognitionMode);
             }

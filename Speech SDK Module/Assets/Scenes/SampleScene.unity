@@ -634,9 +634,6 @@ MonoBehaviour:
   - {fileID: 2052853730}
   - {fileID: 2087333768}
   Terminal: {fileID: 2043880026}
-  simulateOfflineMode: 1
-  WakeWord: Activate Terminal
-  DismissWord: Hide Terminal
 --- !u!114 &808446991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -665,6 +662,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpeechServiceAPIKey: febaa5534609486b852704fcffbf1d2a
   SpeechServiceRegion: westus
+  WakeWord: Activate Terminal
+  DismissWord: Hide Terminal
 --- !u!114 &808446993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,6 +690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4ad27086de1364ab6e35c64749052f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  simulateOfflineMode: 1
 --- !u!114 &808446995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -703,6 +703,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abf44f7da64451b4796d24a0f6e6c40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  luisEndpoint: https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=a6efc7b1f54e479494feaa57e9dc07f8&q=
+  LaunchButton: {fileID: 0}
+  ResetButton: {fileID: 0}
+  HintButton: {fileID: 0}
 --- !u!1 &993210577
 GameObject:
   m_ObjectHideFlags: 0

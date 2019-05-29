@@ -26,14 +26,10 @@ public class LunarcomController : MonoBehaviour
     public delegate void OnSelectRecognitionMode(RecognitionMode selectedMode);
     public event OnSelectRecognitionMode onSelectRecognitionMode;
 
-    [Space(6)]
-    [Header("Lunarcom Settings")]
-    public SimuilateOfflineMode simulateOfflineMode = SimuilateOfflineMode.Disabled;
-    public string WakeWord = "Activate Lunarcom";
-    public string DismissWord = "Hide Lunarcom";
-
     RecognitionMode speechRecognitionMode = RecognitionMode.Disabled;
     LunarcomButtonController activeButton = null;
+    LunarcomWakeWordRecognizer lunarcomWakeWordRecognizer = null;
+    LunarcomOfflineRecognizer lunarcomOfflineRecognizer = null;
 
     private void Awake()
     {
@@ -46,28 +42,44 @@ public class LunarcomController : MonoBehaviour
 
     private void Start()
     {
-        if (simulateOfflineMode == SimuilateOfflineMode.Disabled)
+        if (GetComponent<LunarcomOfflineRecognizer>())
+        {
+            lunarcomOfflineRecognizer = GetComponent<LunarcomOfflineRecognizer>();
+            if (lunarcomOfflineRecognizer.simulateOfflineMode == SimuilateOfflineMode.Disabled)
+            {
+                SetupOnlineMode();
+            }
+            else
+            {
+                SetupOfflineMode();
+            }
+        } else
         {
             SetupOnlineMode();
         }
-        else
+
+        if (GetComponent<LunarcomWakeWordRecognizer>())
         {
-            SetupOfflineMode();
+            lunarcomWakeWordRecognizer = GetComponent<LunarcomWakeWordRecognizer>();
         }
     }
 
     private void SetupOnlineMode()
     {
-        if (WakeWord == "")
+        if (lunarcomWakeWordRecognizer != null)
         {
-            WakeWord = "*";
-            DismissWord = "*";
-        }
+            if (lunarcomWakeWordRecognizer.WakeWord == "")
+            {
+                lunarcomWakeWordRecognizer.WakeWord = "*";
+                lunarcomWakeWordRecognizer.DismissWord = "*";
+            }
 
-        if (DismissWord == "")
-        {
-            DismissWord = "*";
+            if (lunarcomWakeWordRecognizer.DismissWord == "")
+            {
+                lunarcomWakeWordRecognizer.DismissWord = "*";
+            }
         }
+        
 
         if (GetComponent<LunarcomTranslationRecognizer>())
         {
@@ -78,13 +90,18 @@ public class LunarcomController : MonoBehaviour
         {
             ActivateButtonNamed("Rocket");
         }
+
         ShowConnected(true);
     }
 
     private void SetupOfflineMode()
     {
-        WakeWord = "*";
-        DismissWord = "*";
+        if (lunarcomWakeWordRecognizer != null)
+        {
+            lunarcomWakeWordRecognizer.WakeWord = "*";
+            lunarcomWakeWordRecognizer.DismissWord = "*";
+        }
+        
         if (GetComponent<LunarcomWakeWordRecognizer>())
         {
             GetComponent<LunarcomWakeWordRecognizer>().enabled = false;
@@ -168,7 +185,6 @@ public class LunarcomController : MonoBehaviour
             }
 
             outputText.text = "Select a mode to begin.";
-            Debug.Log("Hiding terminal");
             Terminal.SetActive(false);
             SelectMode(RecognitionMode.Disabled);
         }
@@ -176,12 +192,19 @@ public class LunarcomController : MonoBehaviour
 
     public void UpdateLunarcomText(string textToUpdate)
     {
-        if (!textToUpdate.ToLower().Contains(DismissWord.ToLower()))
+        if (lunarcomWakeWordRecognizer != null)
+        {
+            if (!textToUpdate.ToLower().Contains(lunarcomWakeWordRecognizer.DismissWord.ToLower()))
+            {
+                outputText.text = textToUpdate;
+            } else
+            {
+                HideTerminal();
+            }
+        }
+        else
         {
             outputText.text = textToUpdate;
-        } else
-        {
-            HideTerminal();
         }
     }
 }

@@ -8,16 +8,20 @@ using UnityEngine.Windows.Speech;
 
 public class LunarcomIntentRecognizer : MonoBehaviour
 {
-    [Header("LUIS Credentials")]
-    //public string LUISKey = "fa2db4721c3344ef9b98f62b808782f3";
-    //public string LUISRegion = "westus";
-    //public string LUISAppID = "6a1bc995-6b04-4831-83b7-430fae70f7df";
+    [Header("LUIS Endpoint")]
+    public string luisEndpoint = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=a6efc7b1f54e479494feaa57e9dc07f8&q=";
 
-    string luisEndpoint = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=a6efc7b1f54e479494feaa57e9dc07f8&q=";
-    DictationRecognizer dictationRecognizer;  //Component converting speech to text
+    [Space(6)]
+    [Header("Lunar Launcher Buttons")]
+    public Button LaunchButton;
+    public Button ResetButton;
+    public Button HintButton;
+
+    DictationRecognizer dictationRecognizer;
     LunarcomController lunarcomController;
     bool micPermissionGranted = false;
     string recognizedString;
+    bool capturingAudio = false;
     bool buttonRecognized = false;
 
     void Start()
@@ -44,7 +48,10 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         }
         else
         {
-            StopCapturingAudio(); // this may not be right.
+            if (capturingAudio)
+            {
+                StopCapturingAudio();
+            }
             recognizedString = "";
             buttonRecognized = false;
         }
@@ -66,12 +73,15 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                 dictationRecognizer.DictationError += DictationRecognizer_DictationError;
             }
             dictationRecognizer.Start();
+            capturingAudio = true;
         }
     }
 
     public void StopCapturingAudio()
     {
         dictationRecognizer.Stop();
+        dictationRecognizer = null;
+        capturingAudio = false;
     }
 
     private void DictationRecognizer_DictationResult(string dictationCaptured, ConfidenceLevel confidence)
@@ -182,13 +192,13 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         switch (targetButton)
         {
             case "launch":
-                CompleteButtonPress("Launch");
+                CompleteButtonPress("Launch", LaunchButton);
                 break;
             case "reset":
-                CompleteButtonPress("Reset");
+                CompleteButtonPress("Reset", ResetButton);
                 break;
             case "hint":
-                CompleteButtonPress("Hint");
+                CompleteButtonPress("Hint", HintButton);
                 break;
         }
     }
@@ -200,7 +210,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
 
         if (buttonToPush != null)
         {
-            // invoke button press here
+            buttonToPush.onClick.Invoke();
         }
     }
 

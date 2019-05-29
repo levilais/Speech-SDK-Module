@@ -7,6 +7,11 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
     public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
     public string SpeechServiceRegion = "westus";
 
+    [Space(6)]
+    [Header("Lunar Launcher Buttons")]
+    public string WakeWord = "Activate Terminal";
+    public string DismissWord = "Hide Terminal";
+
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
 
@@ -32,12 +37,16 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
 
         lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
 
-        if (lunarcomController.simulateOfflineMode != SimuilateOfflineMode.Enabled)
+        if (GetComponent<LunarcomOfflineRecognizer>())
         {
-            if (lunarcomController.WakeWord != "" && lunarcomController.WakeWord != "*")
+            LunarcomOfflineRecognizer lunarcomOfflineRecognizer = GetComponent<LunarcomOfflineRecognizer>();
+            if (lunarcomOfflineRecognizer.simulateOfflineMode != SimuilateOfflineMode.Enabled)
             {
-                lunarcomController.HideTerminal();
-                BeginRecognizing();
+                if (WakeWord != "" && WakeWord != "*")
+                {
+                    lunarcomController.HideTerminal();
+                    BeginRecognizing();
+                }
             }
         }
     }
@@ -103,13 +112,13 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
         {
             if (lunarcomController.Terminal.activeSelf)
             {
-                if (recognizedString.ToLower().Contains(LunarcomController.lunarcomController.DismissWord.ToLower()))
+                if (recognizedString.ToLower().Contains(DismissWord.ToLower()))
                 {
                     lunarcomController.HideTerminal();
                 }
             } else
             {
-                if (recognizedString.ToLower().Contains(lunarcomController.WakeWord.ToLower()))
+                if (recognizedString.ToLower().Contains(WakeWord.ToLower()))
                 {
                     lunarcomController.ShowTerminal();
                 }
