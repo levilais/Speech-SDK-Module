@@ -18,6 +18,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     LunarcomController lunarcomController;
     bool micPermissionGranted = false;
     string recognizedString;
+    bool buttonRecognized = false;
 
     void Start()
     {
@@ -45,6 +46,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         {
             StopCapturingAudio(); // this may not be right.
             recognizedString = "";
+            buttonRecognized = false;
         }
     }
 
@@ -64,21 +66,18 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                 dictationRecognizer.DictationError += DictationRecognizer_DictationError;
             }
             dictationRecognizer.Start();
-            Debug.Log("Capturing Audio...");
         }
     }
 
     public void StopCapturingAudio()
     {
         dictationRecognizer.Stop();
-        Debug.Log("Stop Capturing Audio...");
     }
 
     private void DictationRecognizer_DictationResult(string dictationCaptured, ConfidenceLevel confidence)
     {
         StopCapturingAudio();
         StartCoroutine(SubmitRequestToLuis(dictationCaptured, BeginRecognizing));
-        Debug.Log("Dictation: " + dictationCaptured);
         recognizedString = dictationCaptured;
     }
 
@@ -87,7 +86,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         Debug.Log("Dictation exception: " + error);
     }
 
-    [Serializable] //this class represents the LUIS response
+    [Serializable]
     class AnalysedQuery
     {
         public TopScoringIntentData topScoringIntent;
@@ -183,14 +182,25 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         switch (targetButton)
         {
             case "launch":
-                recognizedString += "\n\nCommand Recognized:\nPushing the Launch button.";
+                CompleteButtonPress("Launch");
                 break;
             case "reset":
-                recognizedString += "\n\nCommand Recognized:\nPushing the Reset button.";
+                CompleteButtonPress("Reset");
                 break;
             case "hint":
-                recognizedString += "\n\nCommand Recognized:\nPushing the Hint button.";
+                CompleteButtonPress("Hint");
                 break;
+        }
+    }
+
+    private void CompleteButtonPress(string buttonName, Button buttonToPush = null)
+    {
+        recognizedString += "\n\nCommand Recognized:\nPushing the " + buttonName + " button.";
+        buttonRecognized = true;
+
+        if (buttonToPush != null)
+        {
+            // invoke button press here
         }
     }
 
@@ -199,6 +209,17 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Intent_Recognizer)
         {
             lunarcomController.UpdateLunarcomText(recognizedString);
+            if (buttonRecognized)
+            {
+                foreach (LunarcomButtonController button in lunarcomController.lunarcomButtons)
+                {
+                    if (button.GetIsSelected())
+                    {
+                        button.DeselectButton();
+                    }
+                }
+                buttonRecognized = false;
+            }
         }
     }
 }
