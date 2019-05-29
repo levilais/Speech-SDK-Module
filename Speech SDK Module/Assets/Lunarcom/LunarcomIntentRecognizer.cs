@@ -14,55 +14,72 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     //public string LUISAppID = "6a1bc995-6b04-4831-83b7-430fae70f7df";
 
     string luisEndpoint = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=a6efc7b1f54e479494feaa57e9dc07f8&q=";
-    private DictationRecognizer dictationRecognizer;  //Component converting speech to text
-    public Text outputText; //a UI object used to debug dictation result
+    DictationRecognizer dictationRecognizer;  //Component converting speech to text
+    LunarcomController lunarcomController;
+    bool micPermissionGranted = false;
+    string recognizedString;
 
     void Start()
     {
+        lunarcomController = LunarcomController.lunarcomController;
+
+        if (lunarcomController.outputText == null)
+        {
+            Debug.LogError("outputText property is null! Assign a UI Text element to it.");
+        }
+        else
+        {
+            micPermissionGranted = true;
+        }
+
+        lunarcomController.onSelectRecognitionMode += HandleOnSelectRecognitionMode;
+    }
+
+    public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
+    {
+        if (recognitionMode == RecognitionMode.Intent_Recognizer)
+        {
+            BeginRecognizing();
+        }
+        else
+        {
+            StopCapturingAudio(); // this may not be right.
+            recognizedString = "";
+        }
+    }
+
+    private void BeginRecognizing()
+    {
         if (Microphone.devices.Length > 0)
         {
-            StartCapturingAudio();
-            Debug.Log("Mic Detected");
-        }
-    }
-
-    public void StartCapturingAudio()
-    {
-        if (dictationRecognizer == null)
-        {
-            dictationRecognizer = new DictationRecognizer
+            if (dictationRecognizer == null)
             {
-                InitialSilenceTimeoutSeconds = 60,
-                AutoSilenceTimeoutSeconds = 5
-            };
+                dictationRecognizer = new DictationRecognizer
+                {
+                    InitialSilenceTimeoutSeconds = 60,
+                    AutoSilenceTimeoutSeconds = 5
+                };
 
-            dictationRecognizer.DictationResult += DictationRecognizer_DictationResult;
-            dictationRecognizer.DictationError += DictationRecognizer_DictationError;
+                dictationRecognizer.DictationResult += DictationRecognizer_DictationResult;
+                dictationRecognizer.DictationError += DictationRecognizer_DictationError;
+            }
+            dictationRecognizer.Start();
+            Debug.Log("Capturing Audio...");
         }
-        dictationRecognizer.Start();
-        Debug.Log("Capturing Audio...");
     }
 
-    /// <summary>
-    /// Stop microphone capture
-    /// </summary>
     public void StopCapturingAudio()
     {
         dictationRecognizer.Stop();
         Debug.Log("Stop Capturing Audio...");
     }
 
-    /// <summary>
-    /// This handler is called every time the Dictation detects a pause in the speech. 
-    /// This method will stop listening for audio, send a request to the LUIS service 
-    /// and then start listening again.
-    /// </summary>
     private void DictationRecognizer_DictationResult(string dictationCaptured, ConfidenceLevel confidence)
     {
         StopCapturingAudio();
-        StartCoroutine(SubmitRequestToLuis(dictationCaptured, StartCapturingAudio));
+        StartCoroutine(SubmitRequestToLuis(dictationCaptured, BeginRecognizing));
         Debug.Log("Dictation: " + dictationCaptured);
-        outputText.text = dictationCaptured;
+        recognizedString = dictationCaptured;
     }
 
     private void DictationRecognizer_DictationError(string error, int hresult)
@@ -71,25 +88,22 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     }
 
     [Serializable] //this class represents the LUIS response
-    public class AnalysedQuery
+    class AnalysedQuery
     {
         public TopScoringIntentData topScoringIntent;
         public EntityData[] entities;
         public string query;
     }
 
-    // This class contains the Intent LUIS determines 
-    // to be the most likely
     [Serializable]
-    public class TopScoringIntentData
+    class TopScoringIntentData
     {
         public string intent;
         public float score;
     }
 
-    // This class contains data for an Entity
     [Serializable]
-    public class EntityData
+    class EntityData
     {
         public string entity;
         public string type;
@@ -98,10 +112,6 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         public float score;
     }
 
-    /// <summary>
-    /// Call LUIS to submit a dictation result.
-    /// The done Action is called at the completion of the method.
-    /// </summary>
     public IEnumerator SubmitRequestToLuis(string dictationResult, Action done)
     {
         string queryString = string.Concat(Uri.EscapeDataString(dictationResult));
@@ -119,9 +129,8 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                 try
                 {
                     AnalysedQuery analysedQuery = JsonUtility.FromJson<AnalysedQuery>(unityWebRequest.downloadHandler.text);
-
-                    //analyse the elements of the response 
-                    AnalyseResponseElements(analysedQuery);
+ 
+                    UnpackResults(analysedQuery);
                 }
                 catch (Exception exception)
                 {
@@ -134,11 +143,10 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         }
     }
 
-    private void AnalyseResponseElements(AnalysedQuery aQuery)
+    private void UnpackResults(AnalysedQuery aQuery)
     {
         string topIntent = aQuery.topScoringIntent.intent;
 
-        // Create a dictionary of entities associated with their type
         Dictionary<string, string> entityDic = new Dictionary<string, string>();
 
         foreach (EntityData ed in aQuery.entities)
@@ -146,7 +154,6 @@ public class LunarcomIntentRecognizer : MonoBehaviour
             entityDic.Add(ed.type, ed.entity);
         }
 
-        // Depending on the topmost recognised intent, read the entities name
         switch (aQuery.topScoringIntent.intent)
         {
             case "PressButton":
@@ -164,26 +171,34 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                         actionToTake = pair.Value;
                     }
                 }
-                UpdateOutputText(targetButton, actionToTake);
+                ProcessResults(targetButton, actionToTake);
                 break;
         }
     }
 
-    public void UpdateOutputText(string targetButton, string actionToTake)
+    public void ProcessResults(string targetButton, string actionToTake)
     {
-        Debug.Log("Pressing button " + targetButton + " because commanded by " + actionToTake);
+        Debug.Log("Pressing the " + targetButton + " button because I was told to " + actionToTake);
 
-        switch (actionToTake)
+        switch (targetButton)
         {
             case "launch":
-                outputText.text = "launch";
+                recognizedString += "\n\nCommand Recognized:\nPushing the Launch button.";
                 break;
             case "reset":
-                outputText.text = "reset";
+                recognizedString += "\n\nCommand Recognized:\nPushing the Reset button.";
                 break;
             case "hint":
-                outputText.text = "hint";
+                recognizedString += "\n\nCommand Recognized:\nPushing the Hint button.";
                 break;
+        }
+    }
+
+    private void Update()
+    {
+        if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Intent_Recognizer)
+        {
+            lunarcomController.UpdateLunarcomText(recognizedString);
         }
     }
 }
