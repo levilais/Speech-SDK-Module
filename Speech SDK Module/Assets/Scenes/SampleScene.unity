@@ -531,6 +531,7 @@ GameObject:
   - component: {fileID: 808446991}
   - component: {fileID: 808446993}
   - component: {fileID: 808446994}
+  - component: {fileID: 808446995}
   m_Layer: 5
   m_Name: Lunarcom
   m_TagString: Untagged
@@ -643,7 +644,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 808446985}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3985d65531502340bdfef76ff037a72, type: 3}
   m_Name: 
@@ -657,7 +658,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 808446985}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f481c39f08d40e49bd8eb86db121e8d, type: 3}
   m_Name: 
@@ -671,7 +672,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 808446985}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a2f6cd1254a8f247b41f2df29ac50c4, type: 3}
   m_Name: 
@@ -685,11 +686,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 808446985}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c4ad27086de1364ab6e35c64749052f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &808446995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808446985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abf44f7da64451b4796d24a0f6e6c40b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outputText: {fileID: 675509981}
 --- !u!1 &993210577
 GameObject:
   m_ObjectHideFlags: 0
