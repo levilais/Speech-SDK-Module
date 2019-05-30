@@ -11,8 +11,8 @@ public class LunarcomController : MonoBehaviour
     public static LunarcomController lunarcomController = null;
 
     [Header("Speech SDK Credentials")]
-    public string SpeechServiceAPIKey = "febaa5534609486b852704fcffbf1d2a";
-    public string SpeechServiceRegion = "westus";
+    public string SpeechServiceAPIKey = "";
+    public string SpeechServiceRegion = "";
 
     [Space(6)]
     [Header("Object References")]

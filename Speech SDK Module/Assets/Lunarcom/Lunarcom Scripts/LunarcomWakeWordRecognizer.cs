@@ -4,8 +4,8 @@ using Microsoft.CognitiveServices.Speech;
 public class LunarcomWakeWordRecognizer : MonoBehaviour
 {
     [Header("Lunar Launcher Buttons")]
-    public string WakeWord = "Activate Terminal";
-    public string DismissWord = "Hide Terminal";
+    public string WakeWord = "";
+    public string DismissWord = "";
 
     private string recognizedString = "Select a mode to begin.";
     private object threadLocker = new object();
@@ -44,6 +44,14 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
                 }
             }
         }
+        //else
+        //{
+        //    if (WakeWord != "" && WakeWord != "*")
+        //    {
+        //        lunarcomController.HideTerminal();
+        //        BeginRecognizing();
+        //    }
+        //}
     }
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
