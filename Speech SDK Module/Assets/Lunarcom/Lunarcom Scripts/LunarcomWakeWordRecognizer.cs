@@ -44,14 +44,14 @@ public class LunarcomWakeWordRecognizer : MonoBehaviour
                 }
             }
         }
-        //else
-        //{
-        //    if (WakeWord != "" && WakeWord != "*")
-        //    {
-        //        lunarcomController.HideTerminal();
-        //        BeginRecognizing();
-        //    }
-        //}
+        else
+        {
+            if (WakeWord != "" && WakeWord != "*")
+            {
+                lunarcomController.HideTerminal();
+                BeginRecognizing();
+            }
+        }
     }
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)

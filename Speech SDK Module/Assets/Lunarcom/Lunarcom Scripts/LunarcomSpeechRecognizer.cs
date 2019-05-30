@@ -33,6 +33,7 @@ public class LunarcomSpeechRecognizer : MonoBehaviour
 
     public void HandleOnSelectRecognitionMode(RecognitionMode recognitionMode)
     {
+        Debug.Log("HandleOnSelectRecognition called");
         if (recognitionMode == RecognitionMode.Speech_Recognizer)
         {
             BeginRecognizing();

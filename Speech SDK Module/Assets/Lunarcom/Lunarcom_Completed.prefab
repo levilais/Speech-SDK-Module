@@ -553,7 +553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abf44f7da64451b4796d24a0f6e6c40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  luisEndpoint: https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=a6efc7b1f54e479494feaa57e9dc07f8&q=
+  luisEndpoint: 
   LaunchButton: {fileID: 0}
   ResetButton: {fileID: 0}
   HintButton: {fileID: 0}

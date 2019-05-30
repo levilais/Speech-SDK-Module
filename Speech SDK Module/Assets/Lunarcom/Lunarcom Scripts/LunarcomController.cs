@@ -69,8 +69,10 @@ public class LunarcomController : MonoBehaviour
         if (lunarcomOfflineRecognizer != null)
         {
             return lunarcomOfflineRecognizer.simulateOfflineMode == SimuilateOfflineMode.Enabled;
+        } else
+        {
+            return false;
         }
-        return false;
     }
 
     private void SetupOnlineMode()

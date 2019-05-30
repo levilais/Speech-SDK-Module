@@ -9,7 +9,7 @@ using UnityEngine.Windows.Speech;
 public class LunarcomIntentRecognizer : MonoBehaviour
 {
     [Header("LUIS Endpoint")]
-    public string luisEndpoint = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=a6efc7b1f54e479494feaa57e9dc07f8&q=";
+    public string luisEndpoint = "";
 
     [Space(6)]
     [Header("Lunar Launcher Buttons")]
