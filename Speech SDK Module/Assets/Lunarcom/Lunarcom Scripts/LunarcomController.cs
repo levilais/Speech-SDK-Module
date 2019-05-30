@@ -18,9 +18,7 @@ public class LunarcomController : MonoBehaviour
     [Header("Object References")]
     public Text outputText;
     public GameObject Terminal;
-    public Sprite connectedLight;
-    public Sprite disconnectedLight;
-    public Image connectionLight;
+    public ConnectionLightController connectionLightController;
 
     [Space(6)]
     [Header("Lunarcom Buttons")]
@@ -177,13 +175,7 @@ public class LunarcomController : MonoBehaviour
 
     public void ShowConnected(bool showConnected)
     {
-        if (showConnected)
-        {
-            connectionLight.sprite = connectedLight;
-        } else
-        {
-            connectionLight.sprite = disconnectedLight;
-        }
+        connectionLightController.ShowConnected(showConnected);
     }
 
     public void ShowTerminal()
