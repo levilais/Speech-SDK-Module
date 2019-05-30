@@ -189,7 +189,19 @@ PrefabInstance:
       propertyPath: SpeechServiceRegion
       value: westus
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4316427421032892435, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
+        type: 3}
+      propertyPath: luisEndpoint
+      value: https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=a6efc7b1f54e479494feaa57e9dc07f8&q=
+      objectReference: {fileID: 0}
+    - target: {fileID: 4316427421032892434, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
+        type: 3}
+      propertyPath: simulateOfflineMode
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4316427421032892435, guid: ce02c8d86e699a14bb0be9d2a71f6b26, type: 3}
+    - {fileID: 4316427421032892433, guid: ce02c8d86e699a14bb0be9d2a71f6b26, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ce02c8d86e699a14bb0be9d2a71f6b26, type: 3}
 --- !u!1 &170076733
 GameObject:
