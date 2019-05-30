@@ -22,7 +22,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     bool micPermissionGranted = false;
     string recognizedString;
     bool capturingAudio = false;
-    bool buttonRecognized = false;
+    bool commandCaptured = false;
 
     void Start()
     {
@@ -44,6 +44,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
     {
         if (recognitionMode == RecognitionMode.Intent_Recognizer)
         {
+            recognizedString = "Say something...";
             BeginRecognizing();
         }
         else
@@ -53,7 +54,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                 StopCapturingAudio();
             }
             recognizedString = "";
-            buttonRecognized = false;
+            commandCaptured = false;
         }
     }
 
@@ -183,6 +184,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                 ProcessResults(targetButton, actionToTake);
                 break;
         }
+        CompleteButtonPress();
     }
 
     public void ProcessResults(string targetButton, string actionToTake)
@@ -203,15 +205,19 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         }
     }
 
-    private void CompleteButtonPress(string buttonName, Button buttonToPush = null)
+    private void CompleteButtonPress(string buttonName = null, Button buttonToPush = null)
     {
-        recognizedString += "\n\nCommand Recognized:\nPushing the " + buttonName + " button.";
-        buttonRecognized = true;
+        if (buttonName != null)
+        {
+            recognizedString += "\n\nCommand Recognized:\nPushing the " + buttonName + " button.";
+        }
 
         if (buttonToPush != null)
         {
             buttonToPush.onClick.Invoke();
         }
+
+        commandCaptured = true;
     }
 
     private void Update()
@@ -219,7 +225,8 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Intent_Recognizer)
         {
             lunarcomController.UpdateLunarcomText(recognizedString);
-            if (buttonRecognized)
+
+            if (commandCaptured)
             {
                 foreach (LunarcomButtonController button in lunarcomController.lunarcomButtons)
                 {
@@ -228,7 +235,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                         button.DeselectButton();
                     }
                 }
-                buttonRecognized = false;
+                commandCaptured = false;
             }
         }
     }
