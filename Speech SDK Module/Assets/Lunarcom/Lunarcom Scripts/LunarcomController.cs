@@ -166,6 +166,13 @@ public class LunarcomController : MonoBehaviour
     {
         speechRecognitionMode = speechRecognitionModeToSet;
         onSelectRecognitionMode(speechRecognitionMode);
+        if (speechRecognitionMode == RecognitionMode.Disabled)
+        {
+            if (outputText.text == "Say something..." || outputText.text == "")
+            {
+                outputText.text = "Select a mode to begin.";
+            }
+        }
     }
 
     public void ShowConnected(bool showConnected)
