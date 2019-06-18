@@ -137,7 +137,7 @@ PrefabInstance:
     - target: {fileID: 4316427421032892429, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4316427421032892429, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
         type: 3}
@@ -179,10 +179,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4316427421032892429, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.0061764005
+      objectReference: {fileID: 0}
+    - target: {fileID: 4316427421032892429, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.0061764005
+      objectReference: {fileID: 0}
+    - target: {fileID: 4316427421032892429, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.0061764005
+      objectReference: {fileID: 0}
     - target: {fileID: 4316427421032892430, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
         type: 3}
       propertyPath: SpeechServiceAPIKey
-      value: febaa5534609486b852704fcffbf1d2a
+      value: f2301903e19048aa85ffe2f7a6b77c8d
       objectReference: {fileID: 0}
     - target: {fileID: 4316427421032892430, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
         type: 3}
@@ -192,16 +207,19 @@ PrefabInstance:
     - target: {fileID: 4316427421032892435, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
         type: 3}
       propertyPath: luisEndpoint
-      value: https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=a6efc7b1f54e479494feaa57e9dc07f8&q=
+      value: https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/6a1bc995-6b04-4831-83b7-430fae70f7df?verbose=true&timezoneOffset=-360&subscription-key=f2301903e19048aa85ffe2f7a6b77c8d&q=
       objectReference: {fileID: 0}
     - target: {fileID: 4316427421032892434, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
         type: 3}
       propertyPath: simulateOfflineMode
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4316427421032892435, guid: ce02c8d86e699a14bb0be9d2a71f6b26, type: 3}
-    - {fileID: 4316427421032892433, guid: ce02c8d86e699a14bb0be9d2a71f6b26, type: 3}
+    - target: {fileID: 4316427421958473307, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 16
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce02c8d86e699a14bb0be9d2a71f6b26, type: 3}
 --- !u!1 &170076733
 GameObject:
@@ -414,6 +432,103 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
+--- !u!4 &885704361 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4316427421032892429, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
+    type: 3}
+  m_PrefabInstance: {fileID: 54192959}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1541985693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1541985694}
+  - component: {fileID: 1541985697}
+  - component: {fileID: 1541985696}
+  - component: {fileID: 1541985695}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1541985694
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541985693}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -96, y: 0, z: 90}
+  m_LocalScale: {x: 29.88, y: 29.88, z: 29.88}
+  m_Children: []
+  m_Father: {fileID: 885704361}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1541985695
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541985693}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1541985696
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541985693}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1541985697
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541985693}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1568831741
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,7 +558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83d9acc7968244a8886f3af591305bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeProfile: {fileID: 11400000, guid: edb62eb3cb3c3394596d82b925ba31c8, type: 2}
+  activeProfile: {fileID: 11400000, guid: 31a611a779d3499e8e35f1a2018ca841, type: 2}
 --- !u!4 &1568831743
 Transform:
   m_ObjectHideFlags: 0
