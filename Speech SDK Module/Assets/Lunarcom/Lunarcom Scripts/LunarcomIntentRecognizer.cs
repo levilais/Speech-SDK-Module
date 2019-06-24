@@ -90,7 +90,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
 
     private void DictationRecognizer_DictationResult(string dictationCaptured, ConfidenceLevel confidence)
     {
-        StopCapturingAudio();
+        //StopCapturingAudio();
         StartCoroutine(SubmitRequestToLuis(dictationCaptured, BeginRecognizing));
         recognizedString = dictationCaptured;
     }
