@@ -73,6 +73,9 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                 dictationRecognizer.DictationResult += DictationRecognizer_DictationResult;
                 dictationRecognizer.DictationError += DictationRecognizer_DictationError;
             }
+
+
+
             dictationRecognizer.Start();
             capturingAudio = true;
         }

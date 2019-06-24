@@ -219,6 +219,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 16
       objectReference: {fileID: 0}
+    - target: {fileID: 4316427422035479434, guid: ce02c8d86e699a14bb0be9d2a71f6b26,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce02c8d86e699a14bb0be9d2a71f6b26, type: 3}
 --- !u!1 &170076733
@@ -558,7 +563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83d9acc7968244a8886f3af591305bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeProfile: {fileID: 11400000, guid: 31a611a779d3499e8e35f1a2018ca841, type: 2}
+  activeProfile: {fileID: 11400000, guid: 40f558e3b7e1738439e22dd28f0147a7, type: 2}
 --- !u!4 &1568831743
 Transform:
   m_ObjectHideFlags: 0
