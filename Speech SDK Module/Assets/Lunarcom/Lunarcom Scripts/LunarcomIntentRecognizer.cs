@@ -75,17 +75,23 @@ public class LunarcomIntentRecognizer : MonoBehaviour
             }
 
 
-
-            dictationRecognizer.Start();
+            if (dictationRecognizer.Status == SpeechSystemStatus.Stopped) {
+                dictationRecognizer.Start();
+            }
             capturingAudio = true;
         }
     }
 
     public void StopCapturingAudio()
     {
-        dictationRecognizer.Stop();
-        dictationRecognizer = null;
-        capturingAudio = false;
+        if (dictationRecognizer != null && dictationRecognizer.Status != SpeechSystemStatus.Stopped)
+        {
+            dictationRecognizer.DictationResult -= DictationRecognizer_DictationResult;
+            dictationRecognizer.DictationError -= DictationRecognizer_DictationError;
+            dictationRecognizer.Stop();
+            dictationRecognizer = null;
+            capturingAudio = false;
+        }
     }
 
     private void DictationRecognizer_DictationResult(string dictationCaptured, ConfidenceLevel confidence)
