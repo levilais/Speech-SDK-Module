@@ -214,6 +214,11 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         }
     }
 
+    private void CompleteButtonPress(string v, GameObject launchButton)
+    {
+        throw new NotImplementedException();
+    }
+
     private void CompleteButtonPress(string buttonName = null, Button buttonToPush = null)
     {
         if (buttonName != null)
