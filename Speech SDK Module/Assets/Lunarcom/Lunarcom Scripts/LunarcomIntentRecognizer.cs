@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.Windows.Speech;
+using Microsoft.MixedReality.Toolkit.UI;
 
 public class LunarcomIntentRecognizer : MonoBehaviour
 {
@@ -13,9 +14,9 @@ public class LunarcomIntentRecognizer : MonoBehaviour
 
     [Space(6)]
     [Header("Lunar Launcher Buttons")]
-    public Button LaunchButton;
-    public Button ResetButton;
-    public Button HintButton;
+    public GameObject LaunchButton;
+    public GameObject ResetButton;
+    public GameObject HintButton;
 
     DictationRecognizer dictationRecognizer;
     LunarcomController lunarcomController;
@@ -148,7 +149,7 @@ public class LunarcomIntentRecognizer : MonoBehaviour
                 try
                 {
                     AnalysedQuery analysedQuery = JsonUtility.FromJson<AnalysedQuery>(unityWebRequest.downloadHandler.text);
- 
+
                     UnpackResults(analysedQuery);
                 }
                 catch (Exception exception)
@@ -214,12 +215,12 @@ public class LunarcomIntentRecognizer : MonoBehaviour
         }
     }
 
-    private void CompleteButtonPress(string v, GameObject launchButton)
-    {
-        throw new NotImplementedException();
-    }
+    //private void CompleteButtonPress(string v, GameObject launchButton)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    private void CompleteButtonPress(string buttonName = null, Button buttonToPush = null)
+    private void CompleteButtonPress(string buttonName = null, GameObject buttonToPush = null)
     {
         if (buttonName != null)
         {
@@ -228,29 +229,28 @@ public class LunarcomIntentRecognizer : MonoBehaviour
 
         if (buttonToPush != null)
         {
-            buttonToPush.onClick.Invoke();
+            buttonToPush.GetComponent<Interactable>().OnClick.Invoke();
+        }
+            commandCaptured = true;
         }
 
-        commandCaptured = true;
-    }
-
-    private void Update()
-    {
-        if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Intent_Recognizer)
+        private void Update()
         {
-            lunarcomController.UpdateLunarcomText(recognizedString);
-
-            if (commandCaptured)
+            if (lunarcomController.CurrentRecognitionMode() == RecognitionMode.Intent_Recognizer)
             {
-                foreach (LunarcomButtonController button in lunarcomController.lunarcomButtons)
+                lunarcomController.UpdateLunarcomText(recognizedString);
+
+                if (commandCaptured)
                 {
-                    if (button.GetIsSelected())
+                    foreach (LunarcomButtonController button in lunarcomController.lunarcomButtons)
                     {
-                        button.DeselectButton();
+                        if (button.GetIsSelected())
+                        {
+                            button.DeselectButton();
+                        }
                     }
+                    commandCaptured = false;
                 }
-                commandCaptured = false;
             }
         }
     }
-}
